@@ -1,0 +1,61 @@
+How to run "Random Anomaly Generator" at the local machine:
+
+1. D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python -m venv .venv
+
+2. D:\raw-data\NCI\Projects-Sem-III\Thesis Code>.venv\Scripts\activate.bat
+
+3. (.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>pip install -r requirements.txt
+
+4. (.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python run_generator.py
+
+
+Example:
+C:\Users\DELL>cd "D:\raw-data\NCI\Projects-Sem-III\Thesis Code"
+
+C:\Users\DELL>D:
+
+D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python -m venv .venv
+
+D:\raw-data\NCI\Projects-Sem-III\Thesis Code>.venv\Scripts\activate.bat
+
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>pip install -r requirements.txt
+Collecting networkx>=3.2 (from -r requirements.txt (line 1))
+  Using cached networkx-3.7-py3-none-any.whl.metadata (6.7 kB)
+Collecting numpy>=1.26 (from -r requirements.txt (line 2))
+  Using cached numpy-2.5.4-cp312-cp312-win_amd64.whl.metadata (6.6 kB)
+Collecting pandas>=2.2 (from -r requirements.txt (line 3))
+  Using cached pandas-3.0.6-cp312-cp312-win_amd64.whl.metadata (19 kB)
+Collecting PyYAML>=6.0 (from -r requirements.txt (line 4))
+  Using cached pyyaml-6.0.3-cp312-cp312-win_amd64.whl.metadata (2.4 kB)
+Collecting python-dateutil>=2.8.2 (from pandas>=2.2->-r requirements.txt (line 3))
+  Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting tzdata (from pandas>=2.2->-r requirements.txt (line 3))
+  Using cached tzdata-2026.5-py2.py3-none-any.whl.metadata (1.4 kB)
+Collecting six>=1.5 (from python-dateutil>=2.8.2->pandas>=2.2->-r requirements.txt (line 3))
+  Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Using cached networkx-3.7-py3-none-any.whl (2.1 MB)
+Using cached numpy-2.5.4-cp312-cp312-win_amd64.whl (12.6 MB)
+Using cached pandas-3.0.6-cp312-cp312-win_amd64.whl (9.7 MB)
+Using cached pyyaml-6.0.3-cp312-cp312-win_amd64.whl (154 kB)
+Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Using cached tzdata-2026.5-py2.py3-none-any.whl (347 kB)
+Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+Installing collected packages: tzdata, six, PyYAML, numpy, networkx, python-dateutil, pandas
+Successfully installed PyYAML-6.0.3 networkx-3.7 numpy-2.5.4 pandas-3.0.6 python-dateutil-2.9.0.post0 six-1.17.0 tzdata-2026.5
+
+[notice] A new release of pip is available: 24.0 -> 26.2.1
+[notice] To update, run: python.exe -m pip install --upgrade pip
+
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python run_generator.py
+2026-10-20 20:44:40 INFO    cadgnn: configuration: seed=8304 log_level=INFO datasets_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\datasets output_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output
+2026-10-20 20:44:42 INFO    cadgnn: mean weighted score: benign 0.273, infected 0.347
+2026-10-20 20:44:43 INFO    cadgnn.generator: generated 72739 events on 24500 nodes / 36000 edges (seed 8304)
+72739 events: none=72000, coincidental=456, coordinated=283
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\synthetic_backup_telemetry.csv
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\infrastructure_graph_nodes.csv
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\infrastructure_graph_edges.csv
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\experiment_manifest.json
+
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
