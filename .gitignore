@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Environments
+.venv/
+venv/
+.env
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# Third-party calibration data (see README for sources)
+datasets/
+
+# Generated artifacts
+output/
+logs/
+*.log
+*.pt
+*.ckpt
+
+# Editors
+.vscode/
+.idea/
