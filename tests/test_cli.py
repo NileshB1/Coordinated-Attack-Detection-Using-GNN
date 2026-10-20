@@ -85,3 +85,19 @@ def test_generate_fails_cleanly_on_missing_trace(tmp_path, fake_datasets):
     (fake_datasets / "ransap" / "Cerber.csv").unlink()
     assert main(["--config", str(small_config(tmp_path, fake_datasets)), "generate"]) == 1
     assert not (tmp_path / "out").exists()
+
+
+def test_run_generator_script(tmp_path, fake_datasets):
+    # Run without PYTHONPATH: the script must find the package on its own.
+    env = {k: v for k, v in os.environ.items() if k != "PYTHONPATH"}
+    result = subprocess.run(
+        [sys.executable, str(REPO_ROOT / "run_generator.py"), "--config",
+         str(small_config(tmp_path, fake_datasets))],
+        capture_output=True,
+        text=True,
+        cwd=tmp_path,
+        env=env,
+    )  # fmt: skip
+    assert result.returncode == 0, result.stderr
+    assert "none=240" in result.stdout
+    assert (tmp_path / "out" / "synthetic_backup_telemetry.csv").is_file()

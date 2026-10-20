@@ -10,8 +10,12 @@ Python 3.14 or newer
 ```bash
 python -m venv .venv
 .venv\Scripts\activate          # Windows; use `source .venv/bin/activate` elsewhere
-pip install -e ".[dev]"
+pip install -r requirements.txt       # to run the pipeline
+pip install -r requirements-dev.txt   # also tests and linting
 ```
+
+The `cadgnn` command used below needs the package itself installed as well
+(`pip install -e .`). `run_generator.py` does not.
 
 ## Datasets
 
@@ -42,8 +46,13 @@ against the config file's directory. `--seed`, `--datasets-dir`, `--output-dir` 
 ## Generating synthetic telemetry
 
 ```bash
-cadgnn --config configs/default.yaml generate
+python run_generator.py
+python run_generator.py --seed 42 --output-dir runs/seed42
 ```
+
+`run_generator.py` uses `configs/default.yaml` unless `--config` is given and accepts the same
+overrides as the CLI. With the package installed, `cadgnn --config configs/default.yaml generate`
+is equivalent.
 
 This calibrates the feature ranges from the datasets, builds the infrastructure graph
 (12,000 VMs, 300 storage pools, 200 network fabrics by default), generates the labelled backup
@@ -63,6 +72,7 @@ random draws in the same order. With `--seed 42` it reproduces the notebook's gr
 ## Layout
 
 ```
+run_generator.py   entry point for the random anomaly generator
 configs/      run configurations
 notebooks/    reference notebook for the random anomaly generator (kept unchanged)
 src/cadgnn/   package source
