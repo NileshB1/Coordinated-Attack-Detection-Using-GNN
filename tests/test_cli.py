@@ -44,3 +44,44 @@ def test_module_entry_point_runs():
     )
     assert result.returncode == 0
     assert result.stdout.startswith("cadgnn ")
+
+
+def small_config(tmp_path, datasets):
+    path = tmp_path / "small.yaml"
+    path.write_text(
+        f"seed: 3\n"
+        f"paths:\n  datasets_dir: {datasets.as_posix()}\n  output_dir: out\n"
+        f"generator:\n  n_vms: 40\n  n_storage: 3\n  n_network: 4\n",
+        encoding="utf-8",
+    )
+    return path
+
+
+def test_generate_writes_outputs(tmp_path, fake_datasets, capsys):
+    assert main(["--config", str(small_config(tmp_path, fake_datasets)), "generate"]) == 0
+    out = tmp_path / "out"
+    for name in (
+        "synthetic_backup_telemetry.csv",
+        "infrastructure_graph_nodes.csv",
+        "infrastructure_graph_edges.csv",
+        "experiment_manifest.json",
+    ):
+        assert (out / name).is_file()
+    assert "none=240" in capsys.readouterr().out
+
+
+def test_generate_seed_override_changes_output(tmp_path, fake_datasets):
+    config = str(small_config(tmp_path, fake_datasets))
+    telemetry = tmp_path / "out" / "synthetic_backup_telemetry.csv"
+    main(["--config", config, "generate"])
+    first = telemetry.read_text()
+    main(["--config", config, "generate"])
+    assert telemetry.read_text() == first
+    main(["--config", config, "--seed", "4", "generate"])
+    assert telemetry.read_text() != first
+
+
+def test_generate_fails_cleanly_on_missing_trace(tmp_path, fake_datasets):
+    (fake_datasets / "ransap" / "Cerber.csv").unlink()
+    assert main(["--config", str(small_config(tmp_path, fake_datasets)), "generate"]) == 1
+    assert not (tmp_path / "out").exists()

@@ -5,8 +5,10 @@ import logging
 import sys
 
 from cadgnn import __version__
+from cadgnn.calibration import CalibrationError, calibrate, check_score_separation
 from cadgnn.config import Config, ConfigError, describe, load_config, with_overrides
 from cadgnn.datasets import DatasetError, inspect_datasets
+from cadgnn.generator import generate, save_outputs
 from cadgnn.logging_utils import setup_logging
 
 log = logging.getLogger("cadgnn")
@@ -24,6 +26,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("check", help="validate the configuration and the local datasets")
+    commands.add_parser(
+        "generate", help="calibrate from the datasets and write synthetic backup telemetry"
+    )
     return parser
 
 
@@ -33,6 +38,21 @@ def cmd_check(config: Config) -> int:
     if not inventory.ok:
         log.error("dataset check found %d problem(s)", len(inventory.problems))
         return 1
+    return 0
+
+
+def cmd_generate(config: Config) -> int:
+    calibration = calibrate(config.paths.datasets_dir)
+    benign, infected = check_score_separation(calibration.profile, config.seed)
+    log.info("mean weighted score: benign %.3f, infected %.3f", benign, infected)
+
+    dataset = generate(config.generator, calibration.profile, config.seed)
+    paths = save_outputs(dataset, calibration, config.paths.output_dir)
+
+    counts = dataset.events["label"].value_counts()
+    print(f"{len(dataset.events)} events: " + ", ".join(f"{k}={v}" for k, v in counts.items()))
+    for path in paths.values():
+        print(f"  wrote {path}")
     return 0
 
 
@@ -56,7 +76,9 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "check":
             return cmd_check(config)
-    except DatasetError as exc:
+        if args.command == "generate":
+            return cmd_generate(config)
+    except (DatasetError, CalibrationError) as exc:
         log.error("%s", exc)
         return 1
     raise AssertionError(f"unhandled command {args.command!r}")

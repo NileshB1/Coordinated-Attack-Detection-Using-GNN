@@ -34,9 +34,31 @@ cadgnn --config configs/default.yaml check
 
 ## Configuration
 
-`configs/default.yaml` holds the random seed, log level and data/output paths. Relative paths
-are resolved against the config file's directory. `--seed`, `--datasets-dir`, `--output-dir`
-and `--log-level` override the file for a single run.
+`configs/default.yaml` holds the random seed, log level, data/output paths and the generator
+scenario (infrastructure size, episode counts, timing ranges). Relative paths are resolved
+against the config file's directory. `--seed`, `--datasets-dir`, `--output-dir` and
+`--log-level` override the file for a single run.
+
+## Generating synthetic telemetry
+
+```bash
+cadgnn --config configs/default.yaml generate
+```
+
+This calibrates the feature ranges from the datasets, builds the infrastructure graph
+(12,000 VMs, 300 storage pools, 200 network fabrics by default), generates the labelled backup
+events and writes to the output directory:
+
+| File | Contents |
+| --- | --- |
+| `synthetic_backup_telemetry.csv` | one row per backup event with the four features, weighted `anomaly_score`, `state`, `episode_id` and `label` (`none`, `coincidental`, `coordinated`) |
+| `infrastructure_graph_nodes.csv` | `node_id`, `kind` (`vm`, `backup_image`, `storage`, `network`) |
+| `infrastructure_graph_edges.csv` | `source`, `target` |
+| `experiment_manifest.json` | seed, scenario, calibrated feature ranges and label counts |
+
+The generator is a port of `notebooks/random_anomaly_generator_simple.ipynb` and makes its
+random draws in the same order. With `--seed 42` it reproduces the notebook's graph and events;
+`tests/test_notebook_equivalence.py` checks this by running the notebook code itself.
 
 ## Layout
 
