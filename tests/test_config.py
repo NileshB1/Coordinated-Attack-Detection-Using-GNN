@@ -1,0 +1,82 @@
+from pathlib import Path
+
+import pytest
+
+from cadgnn.config import ConfigError, load_config, parse_config, with_overrides
+from conftest import REPO_ROOT
+
+
+def write(tmp_path: Path, text: str) -> Path:
+    path = tmp_path / "config.yaml"
+    path.write_text(text, encoding="utf-8")
+    return path
+
+
+def test_defaults_resolve_against_cwd(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    config = load_config()
+    assert config.seed == 42
+    assert config.log_level == "INFO"
+    assert config.paths.datasets_dir == (tmp_path / "datasets").resolve()
+
+
+def test_repo_default_config_points_at_repo_datasets():
+    config = load_config(REPO_ROOT / "configs" / "default.yaml")
+    assert config.paths.datasets_dir == (REPO_ROOT / "datasets").resolve()
+    assert config.paths.output_dir == (REPO_ROOT / "output").resolve()
+
+
+def test_relative_paths_resolve_against_config_file(tmp_path):
+    path = write(tmp_path, "paths:\n  datasets_dir: data/raw\n")
+    config = load_config(path)
+    assert config.paths.datasets_dir == (tmp_path / "data" / "raw").resolve()
+    # Unspecified keys keep their defaults.
+    assert config.paths.output_dir == (tmp_path / "output").resolve()
+
+
+def test_empty_file_gives_defaults(tmp_path):
+    assert load_config(write(tmp_path, "")).seed == 42
+
+
+def test_log_level_is_case_insensitive(tmp_path):
+    assert load_config(write(tmp_path, "log_level: debug\n")).log_level == "DEBUG"
+
+
+@pytest.mark.parametrize(
+    "text, message",
+    [
+        ("seed: -1\n", "non-negative"),  ("seed: 1.5\n", "integer"),
+        ("seed: true\n", "integer"),
+        ("seed: '42'\n", "integer"),  ("log_level: LOUD\n", "log_level"),
+        ("paths: nowhere\n", "mapping"),
+        ("paths:\n  datasets_dir: ''\n", "non-empty path"),
+        ("paths:\n  datasets_dir: 3\n", "non-empty path"),
+        ("sede: 1\n", "unknown key"), ("paths:\n  dataset_dir: x\n", "unknown key"),
+        ("- a\n- b\n", "mapping"),
+        ("seed: [1\n", "could not parse"),
+    ],
+)
+def test_invalid_config_is_rejected(tmp_path, text, message):
+    with pytest.raises(ConfigError, match=message):
+        load_config(write(tmp_path, text))
+
+
+def test_missing_config_file(tmp_path):
+    with pytest.raises(ConfigError, match="not found"):
+        load_config(tmp_path / "absent.yaml")
+
+
+def test_overrides(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    config = with_overrides(
+        parse_config({}, base_dir=Path("/elsewhere")), seed=7, datasets_dir="d", log_level="warning"
+    )
+    assert config.seed == 7
+    assert config.log_level == "WARNING"
+    assert config.paths.datasets_dir == (tmp_path / "d").resolve()
+
+
+def test_overrides_are_validated():
+    config = parse_config({}, base_dir=Path.cwd())
+    with pytest.raises(ConfigError):
+        with_overrides(config, seed=-5)

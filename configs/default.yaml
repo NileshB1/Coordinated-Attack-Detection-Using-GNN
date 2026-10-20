@@ -1,0 +1,7 @@
+# These are relative paths and resolved agaist current directory
+seed: 8304
+log_level: INFO
+
+paths:
+  datasets_dir: ../datasets
+  output_dir: ../output
