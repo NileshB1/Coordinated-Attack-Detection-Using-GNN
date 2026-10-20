@@ -7,7 +7,7 @@ If there is no config file then the defaults are resolved against the working di
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, fields, replace
 from pathlib import Path
 from typing import Any
 
@@ -26,10 +26,65 @@ class PathsConfig:
 
 
 @dataclass(frozen=True)
+class GeneratorConfig:
+    """Scenario sizes for the random anomaly generator.
+
+    Defaults are the values of the reference notebook. Ranges are inclusive
+    ``(low, high)`` pairs. ``coordinated_chain_length`` is the number of VMs in an
+    attack chain (the notebook calls it ``n_hops``).
+    """
+
+    n_vms: int = 12000
+    n_storage: int = 300
+    n_network: int = 200
+    observation_hours: float = 72.0
+    benign_backups_per_vm: int = 6
+    n_coincidental_episodes: int = 100
+    coincidental_vms: tuple[int, int] = (3, 6)
+    n_coordinated_episodes: int = 50
+    coordinated_chain_length: tuple[int, int] = (4, 8)
+    hop_delay_minutes: tuple[float, float] = (5.0, 45.0)
+    # Campaigns start no later than observation_hours minus this margin.
+    campaign_start_margin_hours: float = 2.0
+
+    def __post_init__(self) -> None:
+        for name in ("n_vms", "n_storage", "n_network"):
+            _check_int(getattr(self, name), name, minimum=1)
+        for name in ("benign_backups_per_vm", "n_coincidental_episodes", "n_coordinated_episodes"):
+            _check_int(getattr(self, name), name, minimum=0)
+        _check_number(self.observation_hours, "observation_hours")
+        if self.observation_hours <= 0:
+            raise ConfigError("observation_hours must be positive")
+        _check_number(self.campaign_start_margin_hours, "campaign_start_margin_hours")
+        if not 0 <= self.campaign_start_margin_hours < self.observation_hours:
+            raise ConfigError("campaign_start_margin_hours must be in [0, observation_hours)")
+
+        # Frozen dataclass: normalise list values from YAML to tuples via object.__setattr__.
+        object.__setattr__(
+            self, "coincidental_vms", _check_range(self.coincidental_vms, "coincidental_vms", 1)
+        )
+        object.__setattr__(
+            self,
+            "coordinated_chain_length",
+            _check_range(self.coordinated_chain_length, "coordinated_chain_length", 1),
+        )
+        object.__setattr__(
+            self,
+            "hop_delay_minutes",
+            _check_range(self.hop_delay_minutes, "hop_delay_minutes", 0, integer=False),
+        )
+        # Coincidental VMs are drawn without replacement.
+        largest = self.coincidental_vms[1]
+        if self.n_coincidental_episodes and largest > self.n_vms:
+            raise ConfigError(f"coincidental_vms upper bound {largest} exceeds n_vms {self.n_vms}")
+
+
+@dataclass(frozen=True)
 class Config:
     seed: int
     log_level: str
     paths: PathsConfig
+    generator: GeneratorConfig = field(default_factory=GeneratorConfig)
 
 
 DEFAULTS: dict[str, Any] = {
@@ -39,6 +94,7 @@ DEFAULTS: dict[str, Any] = {
         "datasets_dir": "datasets",
         "output_dir": "output",
     },
+    "generator": {f.name: f.default for f in fields(GeneratorConfig)},
 }
 
 
@@ -72,6 +128,7 @@ def parse_config(raw: dict[str, Any], base_dir: Path) -> Config:
             datasets_dir=_path(paths["datasets_dir"], base_dir, "paths.datasets_dir"),
             output_dir=_path(paths["output_dir"], base_dir, "paths.output_dir"),
         ),
+        generator=GeneratorConfig(**data["generator"]),
     )
 
 
@@ -119,6 +176,34 @@ def _seed(value: Any) -> int:
     if value < 0:
         raise ConfigError(f"seed must be non-negative, got {value}")
     return value
+
+
+def _check_int(value: Any, name: str, minimum: int) -> None:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ConfigError(f"{name} must be an integer, got {value!r}")
+    if value < minimum:
+        raise ConfigError(f"{name} must be at least {minimum}, got {value}")
+
+
+def _check_number(value: Any, name: str) -> None:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ConfigError(f"{name} must be a number, got {value!r}")
+
+
+def _check_range(value: Any, name: str, minimum: float, integer: bool = True) -> tuple:
+    if not isinstance(value, (list, tuple)) or len(value) != 2:
+        raise ConfigError(f"{name} must be a [low, high] pair, got {value!r}")
+    low, high = value
+    for bound in (low, high):
+        if integer:
+            _check_int(bound, name, minimum)
+        else:
+            _check_number(bound, name)
+            if bound < minimum:
+                raise ConfigError(f"{name} values must be at least {minimum}, got {bound}")
+    if low > high:
+        raise ConfigError(f"{name} low bound {low} is greater than high bound {high}")
+    return (low, high)
 
 
 def _log_level(value: Any) -> str:

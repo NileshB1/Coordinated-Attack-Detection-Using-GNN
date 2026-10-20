@@ -5,3 +5,17 @@ log_level: INFO
 paths:
   datasets_dir: ../datasets
   output_dir: ../output
+
+# Random anomaly generator scenario. Ranges are inclusive [low, high].
+generator:
+  n_vms: 12000
+  n_storage: 300
+  n_network: 200
+  observation_hours: 72
+  benign_backups_per_vm: 6
+  n_coincidental_episodes: 100
+  coincidental_vms: [3, 6]
+  n_coordinated_episodes: 50
+  coordinated_chain_length: [4, 8]
+  hop_delay_minutes: [5, 45]
+  campaign_start_margin_hours: 2
