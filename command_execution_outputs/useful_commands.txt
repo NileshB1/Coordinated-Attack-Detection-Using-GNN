@@ -1,0 +1,18 @@
+Git commands:
+DELL@NileshB MINGW64 /d/raw-data/NCI/Projects-Sem-III/Thesis Code (master)
+$ git config user.name "NileshB1"
+
+DELL@NileshB MINGW64 /d/raw-data/NCI/Projects-Sem-III/Thesis Code (master)
+$ git config user.email "x25168304@student.ncirl.ie"
+
+DELL@NileshB MINGW64 /d/raw-data/NCI/Projects-Sem-III/Thesis Code (master)
+$ git remote add origin https://github.com/NileshB1/Coordinated-Attack-Detection-Using-GNN.git
+
+
+D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python -m venv .venv
+
+D:\raw-data\NCI\Projects-Sem-III\Thesis Code>.venv\Scripts\activate.bat
+
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>pip install -r requirements.txt
+
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python run_generator.py
