@@ -1,5 +1,4 @@
 -r requirements.txt
 pytest>=8.0
 ruff>=0.6
-# The notebook equivalence tests execute the notebook's import cell.
 matplotlib>=3.8
