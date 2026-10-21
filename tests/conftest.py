@@ -40,3 +40,22 @@ def fake_datasets(tmp_path: Path) -> Path:
         b"\0" * (FSL_HEADER_BYTES - 4) + struct.pack("<I", 5000)
     )
     return root
+
+
+@pytest.fixture(scope="session")
+def small_dataset():
+    """A small generated scenario (60 VMs, 18 episodes) with a fixed, simple profile."""
+    from cadgnn.calibration import FeatureProfile
+    from cadgnn.config import GeneratorConfig
+    from cadgnn.generator import generate
+
+    profile = {
+        "change_rate": FeatureProfile(0.35, 0.0, 0.1, 0.5, 1.0, ""),
+        "file_entropy": FeatureProfile(0.30, 0.3, 0.5, 0.6, 0.8, ""),
+        "backup_size_gb": FeatureProfile(0.20, 0.5, 25.0, 0.6, 0.8, ""),
+        "file_count": FeatureProfile(0.15, 200, 30000, 0.4, 1.6, ""),
+    }
+    config = GeneratorConfig(
+        n_vms=60, n_storage=4, n_network=5, n_coincidental_episodes=10, n_coordinated_episodes=8
+    )
+    return generate(config, profile, seed=21)
