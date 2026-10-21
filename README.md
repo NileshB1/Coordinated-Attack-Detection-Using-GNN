@@ -69,10 +69,36 @@ The generator is a port of `notebooks/random_anomaly_generator_simple.ipynb` and
 random draws in the same order. With `--seed 42` it reproduces the notebook's graph and events;
 `tests/test_notebook_equivalence.py` checks this by running the notebook code itself.
 
+## Building the episode graphs
+
+```bash
+python run_graph_builder.py
+```
+
+Reads the generator output from the output directory and builds one heterogeneous graph
+(PyTorch Geometric `HeteroData`) per anomaly episode, labelled coordinated (1) or
+coincidental (0). Benign backups are background and do not form graphs.
+
+| Node type | Comes from |
+| --- | --- |
+| `vm` | each flagged VM in the episode; features are the event's `change_rate`, `file_entropy`, `backup_size_gb`, `file_count`, plus its timestamp and order in the episode |
+| `backup_image`, `storage`, `network` | the image, storage pool and network fabric of those VMs |
+
+| Edge type (each also has a reverse) |
+| --- |
+| `vm` -`has_backup`-> `backup_image` |
+| `backup_image` -`stored_on`-> `storage` |
+| `vm` -`attached_to`-> `network` |
+
+It writes `episode_graphs.pt` (load with `cadgnn.graph.load_episode_graphs`) and
+`episode_summary.csv` with per-episode size, time span and number of connected components.
+Features are not scaled here; scaling is fitted on the training split later.
+
 ## Layout
 
 ```
-run_generator.py   entry point for the random anomaly generator
+run_generator.py      entry point for the random anomaly generator
+run_graph_builder.py  entry point for building the episode graphs
 configs/      run configurations
 notebooks/    reference notebook for the random anomaly generator (kept unchanged)
 src/cadgnn/   package source

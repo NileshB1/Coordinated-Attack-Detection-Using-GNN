@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+import warnings
 
 from cadgnn import __version__
 from cadgnn.calibration import CalibrationError, calibrate, check_score_separation
@@ -28,6 +29,9 @@ def build_parser() -> argparse.ArgumentParser:
     commands.add_parser("check", help="validate the configuration and the local datasets")
     commands.add_parser(
         "generate", help="calibrate from the datasets and write synthetic backup telemetry"
+    )
+    commands.add_parser(
+        "build-graphs", help="turn the generator output into one graph per anomaly episode"
     )
     return parser
 
@@ -56,6 +60,47 @@ def cmd_generate(config: Config) -> int:
     return 0
 
 
+def cmd_build_graphs(config: Config) -> int:
+    # Imported here so check and generate don't need torch. torch_geometric triggers
+    # a torch.jit deprecation warning on import that we can't act on.
+    warnings.filterwarnings("ignore", message="`torch.jit.script` is deprecated")
+    from cadgnn.graph import (
+        GraphConstructionError,
+        build_episode_graphs,
+        episode_summary,
+        load_generator_output,
+        save_episode_graphs,
+    )
+    from cadgnn.graph.episodes import EPISODE_GRAPHS_FILE, EPISODE_SUMMARY_FILE
+
+    output_dir = config.paths.output_dir
+    try:
+        infra, events = load_generator_output(output_dir)
+        graphs = build_episode_graphs(infra, events, config.graph.min_episode_events)
+    except GraphConstructionError as exc:
+        log.error("%s", exc)
+        return 1
+
+    save_episode_graphs(graphs, output_dir / EPISODE_GRAPHS_FILE)
+    summary = episode_summary(graphs)
+    summary.to_csv(output_dir / EPISODE_SUMMARY_FILE, index=False)
+
+    print(f"{len(graphs)} episode graphs from {len(events)} events")
+    if graphs:
+        per_label = summary.groupby("y").agg(
+            episodes=("episode_id", "size"),
+            mean_vms=("n_vm", "mean"),
+            mean_networks=("n_network", "mean"),
+            mean_components=("n_components", "mean"),
+            mean_span_hours=("time_span_hours", "mean"),
+        )
+        per_label = per_label.rename(index={0: "coincidental (0)", 1: "coordinated (1)"})
+        print(per_label.round(2).to_string())
+    print(f"  wrote {output_dir / EPISODE_GRAPHS_FILE}")
+    print(f"  wrote {output_dir / EPISODE_SUMMARY_FILE}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
 
@@ -78,6 +123,8 @@ def main(argv: list[str] | None = None) -> int:
             return cmd_check(config)
         if args.command == "generate":
             return cmd_generate(config)
+        if args.command == "build-graphs":
+            return cmd_build_graphs(config)
     except (DatasetError, CalibrationError) as exc:
         log.error("%s", exc)
         return 1
