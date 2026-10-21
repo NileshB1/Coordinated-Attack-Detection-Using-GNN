@@ -80,11 +80,21 @@ class GeneratorConfig:
 
 
 @dataclass(frozen=True)
+class GraphConfig:
+    # A single flagged event cannot be judged coordinated or coincidental.
+    min_episode_events: int = 2
+
+    def __post_init__(self) -> None:
+        _check_int(self.min_episode_events, "min_episode_events", minimum=1)
+
+
+@dataclass(frozen=True)
 class Config:
     seed: int
     log_level: str
     paths: PathsConfig
     generator: GeneratorConfig = field(default_factory=GeneratorConfig)
+    graph: GraphConfig = field(default_factory=GraphConfig)
 
 
 DEFAULTS: dict[str, Any] = {
@@ -95,6 +105,7 @@ DEFAULTS: dict[str, Any] = {
         "output_dir": "output",
     },
     "generator": {f.name: f.default for f in fields(GeneratorConfig)},
+    "graph": {f.name: f.default for f in fields(GraphConfig)},
 }
 
 
@@ -129,6 +140,7 @@ def parse_config(raw: dict[str, Any], base_dir: Path) -> Config:
             output_dir=_path(paths["output_dir"], base_dir, "paths.output_dir"),
         ),
         generator=GeneratorConfig(**data["generator"]),
+        graph=GraphConfig(**data["graph"]),
     )
 
 

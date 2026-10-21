@@ -19,3 +19,7 @@ generator:
   coordinated_chain_length: [4, 8]
   hop_delay_minutes: [5, 45]
   campaign_start_margin_hours: 2
+
+# Episode graph construction.
+graph:
+  min_episode_events: 2

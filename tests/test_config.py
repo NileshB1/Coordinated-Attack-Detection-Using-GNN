@@ -144,3 +144,11 @@ def test_small_scenario_without_coincidental_episodes_is_valid():
 def test_unknown_generator_key_is_rejected(tmp_path):
     with pytest.raises(ConfigError, match="unknown key"):
         load_config(write(tmp_path, "generator:\n  n_vm: 10\n"))
+
+
+def test_graph_section(tmp_path):
+    assert load_config(REPO_ROOT / "configs" / "default.yaml").graph.min_episode_events == 2
+    config = load_config(write(tmp_path, "graph:\n  min_episode_events: 3\n"))
+    assert config.graph.min_episode_events == 3
+    with pytest.raises(ConfigError, match="min_episode_events"):
+        load_config(write(tmp_path, "graph:\n  min_episode_events: 0\n"))
