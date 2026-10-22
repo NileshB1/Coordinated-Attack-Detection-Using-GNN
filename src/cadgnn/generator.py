@@ -6,16 +6,11 @@ in the same order as in the notebook, so the same seed and scenario reproduce
 the notebook's graph and events exactly.
 
 Events carry one of three labels:
+* none
+* coincidental
+* coordinated
 
-* ``none``: routine backups, ``benign_backups_per_vm`` per VM at uniform times.
-* ``coincidental``: episodes of randomly chosen VMs with infected-range
-  telemetry at independent uniform times (no temporal or structural link).
-* ``coordinated``: campaigns that move from VM to VM through a shared network
-  fabric, a few minutes apart, with infected-range telemetry.
 
-Coincidental and coordinated events are drawn from the same feature ranges; only
-their timing and placement on the graph differ. These labels are properties of
-the synthetic scenario, not observations of real attacks.
 """
 
 from __future__ import annotations
@@ -38,15 +33,10 @@ log = logging.getLogger(__name__)
 NODE_KINDS = ("vm", "backup_image", "storage", "network")
 LABELS = ("none", "coincidental", "coordinated")
 EVENT_COLUMNS = [
-    "vm",
-    "timestamp_hours",
-    "change_rate",
-    "file_entropy",
-    "backup_size_gb",
-    "file_count",
-    "anomaly_score",
-    "state",
-    "episode_id",
+    "vm", "timestamp_hours",
+    "change_rate", "file_entropy", "backup_size_gb",
+    "file_count", "anomaly_score",
+    "state", "episode_id",
     "label",
 ]
 
@@ -138,12 +128,10 @@ def make_event(
     # The score uses unrounded values; only the stored values are rounded.
     score = weighted_score(profile, values)
     return {
-        "vm": vm,
-        "timestamp_hours": round(timestamp_hours, 3),
+        "vm": vm,  "timestamp_hours": round(timestamp_hours, 3),
         **{name: round(value, 4) for name, value in values.items()},
         "anomaly_score": round(score, 4),
-        "state": state,
-        "episode_id": episode_id,
+        "state": state,  "episode_id": episode_id,
         "label": label,
     }
 
@@ -212,8 +200,7 @@ def generate(config: GeneratorConfig, profile: ParamProfile, seed: int) -> Synth
         "generated %d events on %d nodes / %d edges (seed %d)",
         len(events),
         graph.number_of_nodes(),
-        graph.number_of_edges(),
-        seed,
+        graph.number_of_edges(), seed
     )
     return SyntheticDataset(graph=graph, events=events, config=config, seed=seed)
 
@@ -224,13 +211,10 @@ def build_manifest(dataset: SyntheticDataset, calibration: Calibration) -> dict:
     return {
         "random_seed": dataset.seed,
         "num_vms": config.n_vms,
-        "num_storage": config.n_storage,
-        "num_network": config.n_network,
-        "total_graph_nodes": graph.number_of_nodes(),
-        "total_graph_edges": graph.number_of_edges(),
+        "num_storage": config.n_storage,  "num_network": config.n_network,
+        "total_graph_nodes": graph.number_of_nodes(), "total_graph_edges": graph.number_of_edges(),
         "num_features": len(profile),
-        "features": list(profile),
-        "feature_weights": {name: f.weight for name, f in profile.items()},
+        "features": list(profile),  "feature_weights": {name: f.weight for name, f in profile.items()},
         "total_events": len(events),
         "label_counts": {k: int(v) for k, v in events["label"].value_counts().items()},
         "calibration_sources": {
@@ -247,8 +231,7 @@ def build_manifest(dataset: SyntheticDataset, calibration: Calibration) -> dict:
             "ransap": calibration.ransap.to_dict(orient="records"),
             "napierone_normal_avg_kb": calibration.napierone_normal_kb,
             "napierone_ransomware_avg_kb": calibration.napierone_ransomware_kb,
-            "size_ratio": calibration.size_ratio,
-            "fsl_file_count": calibration.fsl_file_count,
+            "size_ratio": calibration.size_ratio, "fsl_file_count": calibration.fsl_file_count,
             "fallbacks": calibration.fallbacks,
         },
         "package_version": __version__,
@@ -262,8 +245,7 @@ def save_outputs(
     output_dir.mkdir(parents=True, exist_ok=True)
     paths = {
         "telemetry": output_dir / TELEMETRY_FILE,
-        "nodes": output_dir / NODES_FILE,
-        "edges": output_dir / EDGES_FILE,
+        "nodes": output_dir / NODES_FILE,  "edges": output_dir / EDGES_FILE,
         "manifest": output_dir / MANIFEST_FILE,
     }
 

@@ -1,8 +1,6 @@
 """Run configuration loaded from YAML.
 
-Relative paths in a config file are resolved against the file's own directory,
-so a config behaves the same regardless of the working directory. 
-If there is no config file then the defaults are resolved against the working directory.
+Relative paths in a config file are resolved against the file's own directory
 """
 
 from __future__ import annotations
@@ -28,10 +26,6 @@ class PathsConfig:
 @dataclass(frozen=True)
 class GeneratorConfig:
     """Scenario sizes for the random anomaly generator.
-
-    Defaults are the values of the reference notebook. Ranges are inclusive
-    ``(low, high)`` pairs. ``coordinated_chain_length`` is the number of VMs in an
-    attack chain (the notebook calls it ``n_hops``).
     """
 
     n_vms: int = 12000

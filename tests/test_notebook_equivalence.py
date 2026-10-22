@@ -1,10 +1,3 @@
-"""Check the generator port against the reference notebook.
-
-The notebook code is executed as-is except for two substitutions: the dataset
-paths point at the repository's datasets/ folder, and the infrastructure size is
-reduced so the test stays fast. Output is written to a temporary directory.
-"""
-
 import json
 import sys
 
@@ -25,18 +18,12 @@ pytestmark = [
     pytest.mark.skipif(sys.version_info < (3, 12), reason="notebook needs Python 3.12+"),
 ]
 
-# Rows 0-9 and label counts printed by the notebook's 12,000-VM run (seed 42).
 NOTEBOOK_HEAD = [
-    ("vm_4142", 0.002, 0.0710, 0.4429, 11.9395, 5398.8195, 0.2294),
-    ("vm_322", 0.003, 0.0550, 0.4460, 22.8759, 9748.0689, 0.3370),
-    ("vm_4684", 0.004, 0.0523, 0.4304, 23.9531, 13672.9032, 0.3532),
-    ("vm_11250", 0.004, 0.0425, 0.4623, 9.4953, 9508.7041, 0.2339),
-    ("vm_3010", 0.004, 0.0032, 0.4797, 16.6065, 28397.3921, 0.3851),
-    ("vm_11428", 0.005, 0.0390, 0.4703, 20.1534, 28313.9496, 0.4194),
-    ("vm_1434", 0.007, 0.0587, 0.4918, 23.9178, 8579.2033, 0.3740),
-    ("vm_5710", 0.007, 0.0357, 0.5074, 24.3372, 21297.9515, 0.4440),
-    ("vm_3184", 0.007, 0.0607, 0.3677, 19.5320, 8479.6203, 0.2489),
-    ("vm_10208", 0.008, 0.0863, 0.5195, 4.3337, 306.5335, 0.2024),
+    ("vm_4142", 0.002, 0.0710, 0.4429, 11.9395, 5398.8195, 0.2294), ("vm_322", 0.003, 0.0550, 0.4460, 22.8759, 9748.0689, 0.3370),
+    ("vm_4684", 0.004, 0.0523, 0.4304, 23.9531, 13672.9032, 0.3532), ("vm_11250", 0.004, 0.0425, 0.4623, 9.4953, 9508.7041, 0.2339),
+    ("vm_3010", 0.004, 0.0032, 0.4797, 16.6065, 28397.3921, 0.3851),  ("vm_11428", 0.005, 0.0390, 0.4703, 20.1534, 28313.9496, 0.4194),
+    ("vm_1434", 0.007, 0.0587, 0.4918, 23.9178, 8579.2033, 0.3740), ("vm_5710", 0.007, 0.0357, 0.5074, 24.3372, 21297.9515, 0.4440),
+    ("vm_3184", 0.007, 0.0607, 0.3677, 19.5320, 8479.6203, 0.2489), ("vm_10208", 0.008, 0.0863, 0.5195, 4.3337, 306.5335, 0.2024)
 ]
 NOTEBOOK_LABEL_COUNTS = {"none": 72000, "coincidental": 465, "coordinated": 288}
 
@@ -54,8 +41,7 @@ def run_notebook(tmp_path, monkeypatch, n_vms, n_storage, n_network):
     replacements = {
         '"datasets/': f'"{DATASETS.as_posix()}/',
         "N_VMS = 12000": f"N_VMS = {n_vms}",
-        "N_STORAGE = 300": f"N_STORAGE = {n_storage}",
-        "N_NETWORK = 200": f"N_NETWORK = {n_network}",
+        "N_STORAGE = 300": f"N_STORAGE = {n_storage}", "N_NETWORK = 200": f"N_NETWORK = {n_network}"
     }
     for old, new in replacements.items():
         assert old in source, f"{old!r} not found in notebook"
@@ -97,6 +83,6 @@ def test_full_scale_run_matches_recorded_notebook_output(calibration):
     events = generate(GeneratorConfig(), calibration.profile, seed=42).events
     assert events["label"].value_counts().to_dict() == NOTEBOOK_LABEL_COUNTS
     columns = ["vm", "timestamp_hours", "change_rate", "file_entropy", "backup_size_gb",
-               "file_count", "anomaly_score"]  # fmt: skip
+               "file_count", "anomaly_score"]
     head = list(events[columns].head(10).itertuples(index=False, name=None))
     assert head == NOTEBOOK_HEAD

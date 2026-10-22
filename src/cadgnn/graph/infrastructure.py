@@ -2,17 +2,7 @@
 
 Each node type gets its own 0-based index, in the order the nodes appear in the
 input. Edges are kept per edge type as (2, E) arrays of those indices, sorted so
-the result does not depend on the row order of the edge table.
-
-Input problems are handled as follows:
-
-* missing ids or kinds, unknown kinds, a node listed twice with different kinds,
-  edges to unknown nodes, self loops and edges between kinds the schema does not
-  relate are errors;
-* exact duplicate nodes and duplicate edges (in either direction) are dropped
-  with a warning;
-* nodes without edges are kept. A storage pool nobody uses is still part of the
-  infrastructure.
+the result does not depend on the row order of the edge table
 """
 
 from __future__ import annotations

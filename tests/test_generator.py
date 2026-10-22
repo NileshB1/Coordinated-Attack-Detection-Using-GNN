@@ -8,15 +8,11 @@ import pytest
 from cadgnn.calibration import FeatureProfile, calibrate
 from cadgnn.config import GeneratorConfig
 from cadgnn.generator import (
-    EVENT_COLUMNS,
-    LABELS,
+    EVENT_COLUMNS,  LABELS,
     NODE_KINDS,
-    build_infrastructure,
-    find_attack_chain,
-    generate,
-    generate_events,
-    save_outputs,
-    vm_nodes,
+    build_infrastructure, find_attack_chain,
+    generate, generate_events,
+    save_outputs, vm_nodes,
 )
 
 # Simple profile with disjoint ranges so states can be told apart from the values.
@@ -27,10 +23,8 @@ PROFILE = {
     "file_count": FeatureProfile(0.15, 200, 30000, 0.4, 1.6, ""),
 }
 SMALL = GeneratorConfig(
-    n_vms=60,
-    n_storage=4,
-    n_network=5,
-    n_coincidental_episodes=10,
+    n_vms=60, n_storage=4,
+    n_network=5, n_coincidental_episodes=10,
     n_coordinated_episodes=8,
 )
 

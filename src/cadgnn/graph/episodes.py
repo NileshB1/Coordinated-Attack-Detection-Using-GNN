@@ -5,24 +5,6 @@ the episode's VMs together with their backup images, storage pools and network
 fabrics, and the edges among them. The question each graph answers is the one
 from RQ1: given these flagged anomalies, are they coordinated (y = 1) or
 coincidental (y = 0)?
-
-Graph contents (``HeteroData``):
-
-``data["vm"]``
-    ``x``: float32 [n_vm, 4] raw telemetry in ``VM_FEATURES`` order (not scaled;
-    scaling must be fitted on the training split later on).
-    ``timestamp_hours``: absolute event time; ``rel_time_hours``: time since the
-    episode's first event; ``event_order``: 0..n_vm-1 by time.
-    ``anomaly_score``: the generator's weighted score, kept for reference.
-``data[kind].global_index`` for every node type
-    Index into ``InfrastructureGraph.node_ids[kind]``, to trace nodes back to ids.
-``data[edge_type].edge_index`` for all six edge types (forward and reverse),
-    empty when an episode has no such edge, so every graph has the same metadata.
-``data.y``: long [1]; ``data.episode_id``: str.
-
-VM nodes are ordered by event time for both labels. The episode id names the
-label (``coordinated_3``), so it is for provenance only and must not be used as
-a model input.
 """
 
 from __future__ import annotations

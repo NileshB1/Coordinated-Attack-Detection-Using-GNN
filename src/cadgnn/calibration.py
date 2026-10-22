@@ -1,20 +1,4 @@
-"""Feature ranges for the anomaly generator, calibrated from the local datasets.
-
-Port of sections 1-4 of notebooks/random_anomaly_generator_simple.ipynb.
-
-Notebook behaviour that is kept deliberately:
-
-* The infected ranges of ``backup_size_gb`` and ``file_count`` are multipliers
-  (the NapierOne encrypted/normal size ratio and an assumed 0.4-1.6 change in
-  file count), but they are sampled as raw feature values. Infected events
-  therefore have ``backup_size_gb`` near 0.73 and ``file_count`` near 1, while
-  benign events are in GB and in the thousands of files.
-* If the NapierOne table or the FSL traces yield nothing, fixed fallback values
-  are used (1161 KB / 844 KB and 30,052 files). Fallbacks are logged and listed
-  in ``Calibration.fallbacks``.
-
-Unlike the notebook, every RanSAP trace is required: calibrating from a partial
-set of traces would silently shift the ranges.
+"""Feature ranges for the anomaly generator, calibrated from the local datasets
 """
 
 from __future__ import annotations

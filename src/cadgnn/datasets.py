@@ -1,7 +1,6 @@
 """Locate and sanity-check the local calibration datasets.
 
-The pipeline only reads datasets from disk; it never downloads them during a
-run. Expected layout under the datasets directory:
+Expected layout under the datasets directory:
 
     ransap/<Trace>.csv   => RanSAP ata_write traces (win7-120gb-hdd)
     napierone/NapierOne-details.md
@@ -16,16 +15,13 @@ from pathlib import Path
 # Trace name -> whether the program is ransomware. Each trace is the ata_write.csv
 # of one RanSAP run, saved under the trace name.
 RANSAP_TRACES: dict[str, bool] = {
-    "Excel": False,  "Firefox": False,
-    "Cerber": True, "Darkside": True,
-    "GandCrab4": True,
-    "Ryuk": True,  "Sodinokibi": True,
+    "Excel": False,  "Firefox": False,  "Cerber": True, "Darkside": True,
+    "GandCrab4": True, "Ryuk": True,  "Sodinokibi": True,
     "TeslaCrypt": True,  "WannaCry": True,
 }
 RANSAP_COLUMNS = (
     "unix_s",  "unix_ns",
-    "block_address",
-    "bytes_written", "entropy_4kib",
+    "block_address", "bytes_written", "entropy_4kib",
     "entropy_8x256b",
 )
 NAPIERONE_FILE = "napierone/NapierOne-details.md"
@@ -52,8 +48,7 @@ class DatasetInventory:
 
     def summary(self) -> str:
         lines = [
-            f"datasets root: {self.root} ",
-            f"RanSAP traces: {len(self.ransap)}/{len(RANSAP_TRACES)} ",
+            f"datasets root: {self.root} ",  f"RanSAP traces: {len(self.ransap)}/{len(RANSAP_TRACES)} ",
             f"NapierOne table: {'found' if self.napierone else 'missing'}",
             f"FSL snapshot traces: {len(self.fsl_snapshots)}",
         ]

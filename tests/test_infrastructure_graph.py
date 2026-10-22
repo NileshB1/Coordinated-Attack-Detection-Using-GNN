@@ -10,22 +10,19 @@ from cadgnn.graph.schema import all_edge_types, edge_type_between, reverse
 
 def frames(nodes, edges):
     return (
-        pd.DataFrame(nodes, columns=["node_id", "kind"]),
-        pd.DataFrame(edges, columns=["source", "target"]),
+        pd.DataFrame(nodes, columns=["node_id", "kind"]),  pd.DataFrame(edges, columns=["source", "target"])
     )
 
 
 TINY_NODES = [
     ("vm_0", "vm"), ("vm_1", "vm"),
     ("image_0", "backup_image"), ("image_1", "backup_image"),
-    ("storage_0", "storage"), ("storage_1", "storage"),
-    ("network_0", "network"),
-]  # fmt: skip
+    ("storage_0", "storage"), ("storage_1", "storage"), ("network_0", "network"),
+]
 TINY_EDGES = [
-    ("vm_0", "image_0"), ("vm_1", "image_1"),
-    ("image_0", "storage_0"), ("image_1", "storage_0"),
-    ("vm_0", "network_0"), ("network_0", "vm_1"),
-]  # fmt: skip
+    ("vm_0", "image_0"), ("vm_1", "image_1"), ("image_0", "storage_0"), ("image_1", "storage_0"),
+    ("vm_0", "network_0"), ("network_0", "vm_1")
+] 
 
 
 def tiny():
@@ -84,14 +81,10 @@ def test_duplicates_are_dropped(caplog):
 @pytest.mark.parametrize(
     "nodes, edges, message",
     [
-        (TINY_NODES + [("vm_0", "storage")], TINY_EDGES, "more than one kind"),
-        (TINY_NODES + [("router_0", "router")], TINY_EDGES, "unknown node kind"),
-        (TINY_NODES + [(None, "vm")], TINY_EDGES, "missing node_id or kind"),
-        (TINY_NODES, TINY_EDGES + [("vm_0", "vm_7")], "not in the node table"),
-        (TINY_NODES, TINY_EDGES + [("vm_0", "vm_0")], "self-loop"),
-        (TINY_NODES, TINY_EDGES + [("vm_0", "vm_1")], "no relation between vm and vm"),
-        (TINY_NODES, TINY_EDGES + [("vm_0", "storage_1")], "no relation between vm and storage"),
-        (TINY_NODES, TINY_EDGES + [("vm_0", None)], "missing source or target"),
+        (TINY_NODES + [("vm_0", "storage")], TINY_EDGES, "more than one kind"),  (TINY_NODES + [("router_0", "router")], TINY_EDGES, "unknown node kind"),
+        (TINY_NODES + [(None, "vm")], TINY_EDGES, "missing node_id or kind"), (TINY_NODES, TINY_EDGES + [("vm_0", "vm_7")], "not in the node table"),
+        (TINY_NODES, TINY_EDGES + [("vm_0", "vm_0")], "self-loop"),  (TINY_NODES, TINY_EDGES + [("vm_0", "vm_1")], "no relation between vm and vm"),
+        (TINY_NODES, TINY_EDGES + [("vm_0", "storage_1")], "no relation between vm and storage"),  (TINY_NODES, TINY_EDGES + [("vm_0", None)], "missing source or target"),
     ],
 )
 def test_invalid_structure_is_rejected(nodes, edges, message):

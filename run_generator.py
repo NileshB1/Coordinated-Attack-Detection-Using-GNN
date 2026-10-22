@@ -4,8 +4,6 @@
     python run_generator.py --seed 42 --output-dir runs/seed42
     python run_generator.py --config configs/my_scenario.yaml
 
-Uses configs/default.yaml unless --config is given. Works from a plain
-`pip install -r requirements.txt`; the package does not need to be installed.
 """
 
 import sys

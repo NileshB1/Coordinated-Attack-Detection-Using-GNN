@@ -65,11 +65,9 @@ def cmd_build_graphs(config: Config) -> int:
     # a torch.jit deprecation warning on import that we can't act on.
     warnings.filterwarnings("ignore", message="`torch.jit.script` is deprecated")
     from cadgnn.graph import (
-        GraphConstructionError,
-        build_episode_graphs,
-        episode_summary,
-        load_generator_output,
-        save_episode_graphs,
+        GraphConstructionError, build_episode_graphs,
+        episode_summary, load_generator_output,
+        save_episode_graphs
     )
     from cadgnn.graph.episodes import EPISODE_GRAPHS_FILE, EPISODE_SUMMARY_FILE
 
@@ -89,10 +87,8 @@ def cmd_build_graphs(config: Config) -> int:
     if graphs:
         per_label = summary.groupby("y").agg(
             episodes=("episode_id", "size"),
-            mean_vms=("n_vm", "mean"),
-            mean_networks=("n_network", "mean"),
-            mean_components=("n_components", "mean"),
-            mean_span_hours=("time_span_hours", "mean"),
+            mean_vms=("n_vm", "mean"),  mean_networks=("n_network", "mean"),
+            mean_components=("n_components", "mean"), mean_span_hours=("time_span_hours", "mean")
         )
         per_label = per_label.rename(index={0: "coincidental (0)", 1: "coordinated (1)"})
         print(per_label.round(2).to_string())
@@ -106,10 +102,8 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         config = with_overrides(
-            load_config(args.config),
-            seed=args.seed, log_level=args.log_level,
-            datasets_dir=args.datasets_dir,
-            output_dir=args.output_dir,
+            load_config(args.config),  seed=args.seed, log_level=args.log_level,
+            datasets_dir=args.datasets_dir, output_dir=args.output_dir
         )
     except ConfigError as exc:
         print(f"cadgnn: configuration error: {exc}", file=sys.stderr)

@@ -12,20 +12,13 @@ from cadgnn.calibration import calibrate
 from cadgnn.cli import main
 from cadgnn.generator import save_outputs
 from cadgnn.graph import (
-    EDGE_TYPES,
-    NODE_TYPES,
-    VM_FEATURES,
-    GraphConstructionError,
-    InfrastructureGraph,
-    all_edge_types,
-    anomaly_episodes,
-    build_episode_graph,
-    build_episode_graphs,
-    clean_events,
-    episode_summary,
-    load_episode_graphs,
-    load_generator_output,
-    save_episode_graphs,
+    EDGE_TYPES,  NODE_TYPES,  VM_FEATURES,
+    GraphConstructionError,  InfrastructureGraph,
+    all_edge_types,  anomaly_episodes,
+    build_episode_graph,  build_episode_graphs,
+    clean_events, episode_summary,
+    load_episode_graphs, load_generator_output,
+    save_episode_graphs
 )
 from cadgnn.graph.schema import reverse
 from conftest import REPO_ROOT
@@ -211,10 +204,8 @@ def test_run_graph_builder_script(generator_output, tmp_path):
     result = subprocess.run(
         [sys.executable, str(REPO_ROOT / "run_graph_builder.py"), "--output-dir",
          str(generator_output)],
-        capture_output=True,
-        text=True,
-        cwd=tmp_path,
-        env=env,
-    )  # fmt: skip
+        capture_output=True, text=True,
+        cwd=tmp_path,  env=env,
+    )
     assert result.returncode == 0, result.stderr
     assert (generator_output / "episode_graphs.pt").is_file()

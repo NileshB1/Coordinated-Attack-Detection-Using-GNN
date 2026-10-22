@@ -61,10 +61,8 @@ def test_generate_writes_outputs(tmp_path, fake_datasets, capsys):
     assert main(["--config", str(small_config(tmp_path, fake_datasets)), "generate"]) == 0
     out = tmp_path / "out"
     for name in (
-        "synthetic_backup_telemetry.csv",
-        "infrastructure_graph_nodes.csv",
-        "infrastructure_graph_edges.csv",
-        "experiment_manifest.json",
+        "synthetic_backup_telemetry.csv",  "infrastructure_graph_nodes.csv",
+        "infrastructure_graph_edges.csv", "experiment_manifest.json",
     ):
         assert (out / name).is_file()
     assert "none=240" in capsys.readouterr().out
@@ -93,11 +91,9 @@ def test_run_generator_script(tmp_path, fake_datasets):
     result = subprocess.run(
         [sys.executable, str(REPO_ROOT / "run_generator.py"), "--config",
          str(small_config(tmp_path, fake_datasets))],
-        capture_output=True,
-        text=True,
-        cwd=tmp_path,
-        env=env,
-    )  # fmt: skip
+        capture_output=True, text=True,
+        cwd=tmp_path,  env=env
+    )
     assert result.returncode == 0, result.stderr
     assert "none=240" in result.stdout
     assert (tmp_path / "out" / "synthetic_backup_telemetry.csv").is_file()

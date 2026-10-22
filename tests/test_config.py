@@ -3,12 +3,9 @@ from pathlib import Path
 import pytest
 
 from cadgnn.config import (
-    DEFAULTS,
-    ConfigError,
-    GeneratorConfig,
-    load_config,
-    parse_config,
-    with_overrides,
+    DEFAULTS, ConfigError,
+    GeneratorConfig, load_config,
+    parse_config, with_overrides
 )
 from conftest import REPO_ROOT
 

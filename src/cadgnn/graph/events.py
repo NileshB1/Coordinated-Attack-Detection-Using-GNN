@@ -2,12 +2,12 @@
 
 Rules applied by ``clean_events``:
 
-* missing columns, unknown labels, an attack event without an episode id, a
+- missing columns, unknown labels, an attack event without an episode id, a
   benign event with one, an episode mixing labels, the same VM twice in one
-  episode, and VMs that are not in the infrastructure graph are errors;
-* rows with a missing or non-finite VM, timestamp or feature value are dropped
+  episode, and VMs that are not in the infrastructure graph are errors
+- rows with a missing or non-finite VM, timestamp or feature value are dropped
   with a warning, since there is no sensible value to fill in;
-* exact duplicate rows are dropped with a warning.
+- exact duplicate rows are dropped with a warning.
 """
 
 from __future__ import annotations

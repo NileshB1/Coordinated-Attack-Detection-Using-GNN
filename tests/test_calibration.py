@@ -4,15 +4,11 @@ import pandas as pd
 import pytest
 
 from cadgnn.calibration import (
-    FSL_FALLBACK_FILE_COUNT,
-    CalibrationError,
-    FeatureProfile,
-    build_param_profile,
-    calibrate,
-    check_score_separation,
-    read_fsl_snapshots,
-    read_napierone,
-    weighted_score,
+    FSL_FALLBACK_FILE_COUNT, CalibrationError,
+    FeatureProfile,  build_param_profile,
+    calibrate, check_score_separation,
+    read_fsl_snapshots, read_napierone,
+    weighted_score
 )
 from cadgnn.datasets import FSL_HEADER_BYTES, DatasetError
 from conftest import REPO_ROOT
@@ -24,15 +20,11 @@ needs_real_datasets = pytest.mark.skipif(
 
 # Printed by the reference notebook (section 1) for the same traces.
 NOTEBOOK_RANSAP = {
-    "Excel": (0.5200, 1.1295),
-    "Firefox": (0.3653, 0.7945),
-    "Cerber": (0.6002, 2.9067),
-    "Darkside": (0.5626, 2.8400),
+    "Excel": (0.5200, 1.1295),  "Firefox": (0.3653, 0.7945),
+    "Cerber": (0.6002, 2.9067), "Darkside": (0.5626, 2.8400),
     "GandCrab4": (0.6640, 4.6111),
-    "Ryuk": (0.6217, 5.6170),
-    "Sodinokibi": (0.5947, 4.9115),
-    "TeslaCrypt": (0.7423, 1.0086),
-    "WannaCry": (0.3261, 12.2243),
+    "Ryuk": (0.6217, 5.6170), "Sodinokibi": (0.5947, 4.9115),
+    "TeslaCrypt": (0.7423, 1.0086), "WannaCry": (0.3261, 12.2243)
 }
 
 
