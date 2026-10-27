@@ -30,5 +30,7 @@ model:
   temporal_dim: 64
   spatial_dim: 64
   temporal_layers: 1
+  spatial_layers: 2
+  spatial_heads: 2
   dropout: 0.1
   device: auto

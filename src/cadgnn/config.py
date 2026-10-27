@@ -88,11 +88,16 @@ class ModelConfig:
     temporal_dim: int = 64
     spatial_dim: int = 64
     temporal_layers: int = 1
+    spatial_layers: int = 2
+    spatial_heads: int = 2
     dropout: float = 0.1
     device: str = "auto"
 
     def __post_init__(self) -> None:
-        for name in ("hidden_dim", "temporal_dim", "spatial_dim", "temporal_layers"):
+        for name in (
+            "hidden_dim", "temporal_dim", "spatial_dim",
+            "temporal_layers", "spatial_layers", "spatial_heads",
+        ):  # fmt: skip
             _check_int(getattr(self, name), name, minimum=1)
         _check_number(self.dropout, "dropout")
         if not 0 <= self.dropout < 1:
