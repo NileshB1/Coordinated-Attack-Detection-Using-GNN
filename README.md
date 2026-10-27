@@ -117,6 +117,18 @@ with the mean state. There are no severity labels in the data, so the stream has
 target of its own and learns through the episode label. Missing, negative or decreasing event
 times are rejected.
 
+### Spatial topology stream
+
+`cadgnn.spatial.SpatialTopologyStream` runs graph attention (`GATConv` per edge type inside
+`HeteroConv`) over each episode's VMs, backup images, storage pools and network fabrics, with
+residual connections and layer norm. Resource nodes have no features, so each node also gets
+`log1p` of its degree within the episode graph, which tells a network shared by several flagged
+VMs apart from one used by a single VM. With the default two layers a VM receives information
+from the other VMs on its network. The episode vector is mean and max pooling per node type.
+Only VM telemetry and graph structure are used: event times, labels, episode ids and global node
+indices are not inputs, and the graph has no edge attributes. Layers and attention heads are set
+by `spatial_layers` and `spatial_heads` in the config.
+
 ## Layout
 
 ```
@@ -130,6 +142,7 @@ src/cadgnn/
   graph/              heterogeneous episode graph construction
   models/             batching, feature scaling, node encoder, dual-stream container
   temporal/           temporal severity stream
+  spatial/            spatial topology stream
   config.py, cli.py   configuration and command line
 tests/                pytest suite
 ```
