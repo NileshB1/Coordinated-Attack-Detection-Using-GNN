@@ -1,0 +1,296 @@
+1. (.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>pip install -r requirements.txt
+2. python run_generator.py
+3. python run_graph_builder.py
+4. # For Demo
+   python -c "import sys; sys.path.insert(0, 'src'); from cadgnn.graph import load_episode_graphs; g = load_episode_graphs('output/episode_graphs.pt'); print(len(g)); print(g[0]); print(g[0]['vm'].x)"
+5. pytest tests/test_infrastructure_graph.py tests/test_graph_events.py tests/test_episode_graphs.py
+6. python run_generator.py --seed 42 --output-dir runs\seed42
+7. python run_graph_builder.py --output-dir runs\seed42
+
+Find below commands run on actual setup:
+
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>pip install -r requirements.txt
+Requirement already satisfied: networkx>=3.2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 1)) (3.7)
+Requirement already satisfied: numpy>=1.26 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 2)) (2.5.4)
+Requirement already satisfied: pandas>=2.2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 3)) (3.0.6)
+Requirement already satisfied: PyYAML>=6.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 4)) (6.0.3)
+Collecting torch>=2.2 (from -r requirements.txt (line 5))
+  Using cached torch-2.14.1-cp312-cp312-win_amd64.whl.metadata (38 kB)
+Collecting torch_geometric>=2.5 (from -r requirements.txt (line 6))
+  Using cached torch_geometric-2.8.1-py3-none-any.whl.metadata (64 kB)
+Requirement already satisfied: python-dateutil>=2.8.2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from pandas>=2.2->-r requirements.txt (line 3)) (2.9.0.post0)
+Requirement already satisfied: tzdata in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from pandas>=2.2->-r requirements.txt (line 3)) (2026.5)
+Collecting filelock (from torch>=2.2->-r requirements.txt (line 5))
+  Using cached filelock-4.2.4-py3-none-any.whl.metadata (2.0 kB)
+Collecting typing-extensions>=4.10.0 (from torch>=2.2->-r requirements.txt (line 5))
+  Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting setuptools>=77.0.3 (from torch>=2.2->-r requirements.txt (line 5))
+  Using cached setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
+Collecting sympy>=1.13.3 (from torch>=2.2->-r requirements.txt (line 5))
+  Using cached sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+Collecting jinja2 (from torch>=2.2->-r requirements.txt (line 5))
+  Using cached jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting fsspec>=0.8.5 (from torch>=2.2->-r requirements.txt (line 5))
+  Using cached fsspec-2026.9.0-py3-none-any.whl.metadata (10 kB)
+Collecting aiohttp (from torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached aiohttp-3.14.5-cp312-cp312-win_amd64.whl.metadata (8.5 kB)
+Collecting psutil>=5.8.0 (from torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached psutil-7.2.2-cp37-abi3-win_amd64.whl.metadata (22 kB)
+Collecting pyparsing (from torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+Collecting requests (from torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting tqdm (from torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached tqdm-4.70.1-py3-none-any.whl.metadata (57 kB)
+Collecting xxhash (from torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached xxhash-4.0.2-cp312-cp312-win_amd64.whl.metadata (18 kB)
+Requirement already satisfied: six>=1.5 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from python-dateutil>=2.8.2->pandas>=2.2->-r requirements.txt (line 3)) (1.17.0)
+Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch>=2.2->-r requirements.txt (line 5))
+  Using cached mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting aiohappyeyeballs>=2.5.0 (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached aiohappyeyeballs-2.7.1-py3-none-any.whl.metadata (5.9 kB)
+Collecting aiosignal>=1.4.0 (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+Collecting attrs>=17.3.0 (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+Collecting frozenlist>=1.1.1 (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached frozenlist-1.8.0-cp312-cp312-win_amd64.whl.metadata (21 kB)
+Collecting multidict<8.0,>=4.5 (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6))
+  Downloading multidict-7.2.1-cp312-cp312-win_amd64.whl.metadata (6.3 kB)
+Collecting propcache>=0.2.0 (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached propcache-0.5.4-cp312-cp312-win_amd64.whl.metadata (25 kB)
+Collecting yarl<2.0,>=1.25.1 (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached yarl-1.25.1-cp312-cp312-win_amd64.whl.metadata (115 kB)
+Collecting MarkupSafe>=2.0 (from jinja2->torch>=2.2->-r requirements.txt (line 5))
+  Using cached markupsafe-3.0.4-cp312-cp312-win_amd64.whl.metadata (2.8 kB)
+Collecting charset_normalizer<4,>=2 (from requests->torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached charset_normalizer-3.5.2-cp312-cp312-win_amd64.whl.metadata (47 kB)
+Collecting idna<4,>=2.5 (from requests->torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting urllib3<3,>=1.26 (from requests->torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting certifi>=2023.5.7 (from requests->torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+Collecting colorama (from tqdm->torch_geometric>=2.5->-r requirements.txt (line 6))
+  Using cached colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
+Using cached torch-2.14.1-cp312-cp312-win_amd64.whl (124.1 MB)
+Using cached torch_geometric-2.8.1-py3-none-any.whl (1.3 MB)
+Using cached fsspec-2026.9.0-py3-none-any.whl (221 kB)
+Using cached psutil-7.2.2-cp37-abi3-win_amd64.whl (137 kB)
+Using cached setuptools-84.2.1-py3-none-any.whl (876 kB)
+Using cached sympy-1.14.0-py3-none-any.whl (6.3 MB)
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Using cached aiohttp-3.14.5-cp312-cp312-win_amd64.whl (506 kB)
+Using cached filelock-4.2.4-py3-none-any.whl (162 kB)
+Using cached jinja2-3.1.6-py3-none-any.whl (134 kB)
+Using cached pyparsing-3.3.3-py3-none-any.whl (126 kB)
+Using cached requests-2.34.2-py3-none-any.whl (73 kB)
+Using cached tqdm-4.70.1-py3-none-any.whl (80 kB)
+Using cached xxhash-4.0.2-cp312-cp312-win_amd64.whl (37 kB)
+Using cached aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
+Using cached aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+Using cached attrs-26.1.0-py3-none-any.whl (67 kB)
+Using cached certifi-2026.10.23-py3-none-any.whl (135 kB)
+Using cached charset_normalizer-3.5.2-cp312-cp312-win_amd64.whl (207 kB)
+Using cached frozenlist-1.8.0-cp312-cp312-win_amd64.whl (44 kB)
+Using cached idna-3.20-py3-none-any.whl (69 kB)
+Using cached markupsafe-3.0.4-cp312-cp312-win_amd64.whl (14 kB)
+Using cached mpmath-1.3.0-py3-none-any.whl (536 kB)
+Downloading multidict-7.2.1-cp312-cp312-win_amd64.whl (95 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 95.4/95.4 kB 603.8 kB/s eta 0:00:00
+Using cached propcache-0.5.4-cp312-cp312-win_amd64.whl (46 kB)
+Using cached urllib3-2.8.0-py3-none-any.whl (135 kB)
+Using cached yarl-1.25.1-cp312-cp312-win_amd64.whl (102 kB)
+Using cached colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+Installing collected packages: mpmath, xxhash, urllib3, typing-extensions, sympy, setuptools, pyparsing, psutil, propcache, multidict, MarkupSafe, idna, fsspec, frozenlist, filelock, colorama, charset_normalizer, certifi, attrs, aiohappyeyeballs, yarl, tqdm, requests, jinja2, aiosignal, torch, aiohttp, torch_geometric
+Successfully installed MarkupSafe-3.0.4 aiohappyeyeballs-2.7.1 aiohttp-3.14.5 aiosignal-1.4.0 attrs-26.1.0 certifi-2026.10.23 charset_normalizer-3.5.2 colorama-0.4.6 filelock-4.2.4 frozenlist-1.8.0 fsspec-2026.9.0 idna-3.20 jinja2-3.1.6 mpmath-1.3.0 multidict-7.2.1 propcache-0.5.4 psutil-7.2.2 pyparsing-3.3.3 requests-2.34.2 setuptools-84.2.1 sympy-1.14.0 torch-2.14.1 torch_geometric-2.8.1 tqdm-4.70.1 typing-extensions-4.16.0 urllib3-2.8.0 xxhash-4.0.2 yarl-1.25.1
+
+[notice] A new release of pip is available: 24.0 -> 26.2.2
+[notice] To update, run: python.exe -m pip install --upgrade pip
+
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python run_generator.py
+2026-10-28 00:21:01 INFO    cadgnn: configuration: seed=8304 log_level=INFO datasets_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\datasets output_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output
+2026-10-28 00:21:04 INFO    cadgnn: mean weighted score: benign 0.273, infected 0.347
+2026-10-28 00:21:05 INFO    cadgnn.generator: generated 72739 events on 24500 nodes / 36000 edges (seed 8304)
+72739 events: none=72000, coincidental=456, coordinated=283
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\synthetic_backup_telemetry.csv
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\infrastructure_graph_nodes.csv
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\infrastructure_graph_edges.csv
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\experiment_manifest.json
+
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python run_graph_builder.py
+2026-10-28 00:21:26 INFO    cadgnn: configuration: seed=8304 log_level=INFO datasets_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\datasets output_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output
+150 episode graphs from 72739 events
+                  episodes  mean_vms  mean_networks  mean_components  mean_span_hours
+y
+coincidental (0)       100      4.56           4.55              4.5            43.90
+coordinated (1)         50      5.66           1.00              1.0             1.92
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\episode_graphs.pt
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\episode_summary.csv
+
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python -c "import sys; sys.path.insert(0, 'src'); from cadgnn.graph import load_episode_graphs; g = load_episode_graphs('output/episode_graphs.pt'); print(len(g)); print(g[0]); print(g[0]['vm'].x)"
+D:\raw-data\NCI\Projects-Sem-III\Thesis Code\.venv\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+150
+HeteroData(
+  y=[1],
+  episode_id='coincidental_0',
+  vm={
+    x=[4, 4],
+    timestamp_hours=[4],
+    rel_time_hours=[4],
+    event_order=[4],
+    anomaly_score=[4],
+    num_nodes=4,
+    global_index=[4],
+  },
+  backup_image={
+    num_nodes=4,
+    global_index=[4],
+  },
+  storage={
+    num_nodes=4,
+    global_index=[4],
+  },
+  network={
+    num_nodes=4,
+    global_index=[4],
+  },
+  (vm, has_backup, backup_image)={ edge_index=[2, 4] },
+  (backup_image, backup_of, vm)={ edge_index=[2, 4] },
+  (backup_image, stored_on, storage)={ edge_index=[2, 4] },
+  (storage, stores, backup_image)={ edge_index=[2, 4] },
+  (vm, attached_to, network)={ edge_index=[2, 4] },
+  (network, hosts, vm)={ edge_index=[2, 4] }
+)
+tensor([[0.2247, 0.4276, 0.7366, 0.9273],
+        [0.7845, 0.4711, 0.7579, 1.4974],
+        [0.6319, 0.5533, 0.7845, 1.4257],
+        [0.8208, 0.6219, 0.6608, 1.4934]])
+
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>pip install -r requirements-dev.txt
+Requirement already satisfied: networkx>=3.2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 1)) (3.7)
+Requirement already satisfied: numpy>=1.26 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 2)) (2.5.4)
+Requirement already satisfied: pandas>=2.2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 3)) (3.0.6)
+Requirement already satisfied: PyYAML>=6.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 4)) (6.0.3)
+Requirement already satisfied: torch>=2.2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 5)) (2.14.1)
+Requirement already satisfied: torch_geometric>=2.5 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 6)) (2.8.1)
+Collecting pytest>=8.0 (from -r requirements-dev.txt (line 2))
+  Using cached pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
+Collecting ruff>=0.6 (from -r requirements-dev.txt (line 3))
+  Downloading ruff-0.17.3-py3-none-win_amd64.whl.metadata (21 kB)
+Collecting matplotlib>=3.8 (from -r requirements-dev.txt (line 4))
+  Using cached matplotlib-3.11.2-cp312-cp312-win_amd64.whl.metadata (80 kB)
+Requirement already satisfied: python-dateutil>=2.8.2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from pandas>=2.2->-r requirements.txt (line 3)) (2.9.0.post0)
+Requirement already satisfied: tzdata in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from pandas>=2.2->-r requirements.txt (line 3)) (2026.5)
+Requirement already satisfied: filelock in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (4.2.4)
+Requirement already satisfied: typing-extensions>=4.10.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (4.16.0)
+Requirement already satisfied: setuptools>=77.0.3 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (84.2.1)
+Requirement already satisfied: sympy>=1.13.3 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (1.14.0)
+Requirement already satisfied: jinja2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (3.1.6)
+Requirement already satisfied: fsspec>=0.8.5 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (2026.9.0)
+Requirement already satisfied: aiohttp in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (3.14.5)
+Requirement already satisfied: psutil>=5.8.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (7.2.2)
+Requirement already satisfied: pyparsing in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (3.3.3)
+Requirement already satisfied: requests in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (2.34.2)
+Requirement already satisfied: tqdm in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (4.70.1)
+Requirement already satisfied: xxhash in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (4.0.2)
+Requirement already satisfied: colorama>=0.4 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from pytest>=8.0->-r requirements-dev.txt (line 2)) (0.4.6)
+Collecting iniconfig>=1.0.1 (from pytest>=8.0->-r requirements-dev.txt (line 2))
+  Using cached iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+Collecting packaging>=22 (from pytest>=8.0->-r requirements-dev.txt (line 2))
+  Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pluggy<2,>=1.5 (from pytest>=8.0->-r requirements-dev.txt (line 2))
+  Using cached pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+Collecting pygments>=2.7.2 (from pytest>=8.0->-r requirements-dev.txt (line 2))
+  Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting contourpy>=1.0.1 (from matplotlib>=3.8->-r requirements-dev.txt (line 4))
+  Using cached contourpy-1.4.0-cp312-cp312-win_amd64.whl.metadata (3.8 kB)
+Collecting cycler>=0.10 (from matplotlib>=3.8->-r requirements-dev.txt (line 4))
+  Using cached cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.28.2 (from matplotlib>=3.8->-r requirements-dev.txt (line 4))
+  Downloading fonttools-4.68.0-cp312-cp312-win_amd64.whl.metadata (142 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 142.6/142.6 kB 1.2 MB/s eta 0:00:00
+Collecting kiwisolver>=1.3.1 (from matplotlib>=3.8->-r requirements-dev.txt (line 4))
+  Using cached kiwisolver-1.5.1-cp312-cp312-win_amd64.whl.metadata (5.2 kB)
+Collecting pillow>=9 (from matplotlib>=3.8->-r requirements-dev.txt (line 4))
+  Using cached pillow-13.0.0-cp312-cp312-win_amd64.whl.metadata (9.3 kB)
+Requirement already satisfied: six>=1.5 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from python-dateutil>=2.8.2->pandas>=2.2->-r requirements.txt (line 3)) (1.17.0)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from sympy>=1.13.3->torch>=2.2->-r requirements.txt (line 5)) (1.3.0)
+Requirement already satisfied: aiohappyeyeballs>=2.5.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (2.7.1)
+Requirement already satisfied: aiosignal>=1.4.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (1.4.0)
+Requirement already satisfied: attrs>=17.3.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (26.1.0)
+Requirement already satisfied: frozenlist>=1.1.1 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (1.8.0)
+Requirement already satisfied: multidict<8.0,>=4.5 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (7.2.1)
+Requirement already satisfied: propcache>=0.2.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (0.5.4)
+Requirement already satisfied: yarl<2.0,>=1.25.1 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (1.25.1)
+Requirement already satisfied: MarkupSafe>=2.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from jinja2->torch>=2.2->-r requirements.txt (line 5)) (3.0.4)
+Requirement already satisfied: charset_normalizer<4,>=2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from requests->torch_geometric>=2.5->-r requirements.txt (line 6)) (3.5.2)
+Requirement already satisfied: idna<4,>=2.5 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from requests->torch_geometric>=2.5->-r requirements.txt (line 6)) (3.20)
+Requirement already satisfied: urllib3<3,>=1.26 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from requests->torch_geometric>=2.5->-r requirements.txt (line 6)) (2.8.0)
+Requirement already satisfied: certifi>=2023.5.7 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from requests->torch_geometric>=2.5->-r requirements.txt (line 6)) (2026.10.23)
+Using cached pytest-9.1.1-py3-none-any.whl (386 kB)
+Downloading ruff-0.17.3-py3-none-win_amd64.whl (10.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.3/10.3 MB 6.0 MB/s eta 0:00:00
+Using cached matplotlib-3.11.2-cp312-cp312-win_amd64.whl (9.3 MB)
+Using cached contourpy-1.4.0-cp312-cp312-win_amd64.whl (234 kB)
+Using cached cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.68.0-cp312-cp312-win_amd64.whl (2.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.5/2.5 MB 6.2 MB/s eta 0:00:00
+Using cached iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Using cached kiwisolver-1.5.1-cp312-cp312-win_amd64.whl (70 kB)
+Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Using cached pillow-13.0.0-cp312-cp312-win_amd64.whl (7.3 MB)
+Using cached pluggy-1.7.0-py3-none-any.whl (27 kB)
+Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+Installing collected packages: ruff, pygments, pluggy, pillow, packaging, kiwisolver, iniconfig, fonttools, cycler, contourpy, pytest, matplotlib
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 iniconfig-2.3.1 kiwisolver-1.5.1 matplotlib-3.11.2 packaging-26.3 pillow-13.0.0 pluggy-1.7.0 pygments-2.21.0 pytest-9.1.1 ruff-0.17.3
+
+[notice] A new release of pip is available: 24.0 -> 26.2.2
+[notice] To update, run: python.exe -m pip install --upgrade pip
+
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>pytest tests/test_infrastructure_graph.py tests/test_graph_events.py tests/test_episode_graphs.py
+=================================================================== test session starts ===================================================================
+platform win32 -- Python 3.12.3, pytest-9.1.1, pluggy-1.7.0
+rootdir: D:\raw-data\NCI\Projects-Sem-III\Thesis Code
+configfile: pyproject.toml
+collected 54 items
+
+tests\test_infrastructure_graph.py ....................                                                                                              [ 37%]
+tests\test_graph_events.py ................                                                                                                          [ 66%]
+tests\test_episode_graphs.py ..................                                                                                                      [100%]
+
+=================================================================== 54 passed in 10.00s ===================================================================
+
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python run_generator.py --seed 42 --output-dir runs\seed42
+2026-10-28 00:23:47 INFO    cadgnn: configuration: seed=42 log_level=INFO datasets_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\datasets output_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42
+2026-10-28 00:23:48 INFO    cadgnn: mean weighted score: benign 0.276, infected 0.332
+2026-10-28 00:23:50 INFO    cadgnn.generator: generated 72753 events on 24500 nodes / 36000 edges (seed 42)
+72753 events: none=72000, coincidental=465, coordinated=288
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42\synthetic_backup_telemetry.csv
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42\infrastructure_graph_nodes.csv
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42\infrastructure_graph_edges.csv
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42\experiment_manifest.json
+
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python run_graph_builder.py --output-dir runs\seed42
+2026-10-28 00:23:59 INFO    cadgnn: configuration: seed=8304 log_level=INFO datasets_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\datasets output_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42
+150 episode graphs from 72753 events
+                  episodes  mean_vms  mean_networks  mean_components  mean_span_hours
+y
+coincidental (0)       100      4.65           4.64             4.63            43.97
+coordinated (1)         50      5.76           1.00             1.00             1.99
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42\episode_graphs.pt
+  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42\episode_summary.csv
+
+(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
