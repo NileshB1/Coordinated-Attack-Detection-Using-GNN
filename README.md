@@ -94,6 +94,19 @@ It writes `episode_graphs.pt` (load with `cadgnn.graph.load_episode_graphs`) and
 `episode_summary.csv` with per-episode size, time span and number of connected components.
 Features are not scaled here; scaling is fitted on the training split later.
 
+## Dual-stream model
+
+`cadgnn.models` holds the model foundation:
+
+- `collate()` batches episode graphs and `check_batch()` validates a batch before the forward pass.
+- `FeatureScaler` z-scores the four VM features with statistics from the training graphs only.
+- `NodeEncoder` projects VM telemetry and gives the featureless node types a learned vector each.
+- `DualStreamModel` runs a temporal and a spatial stream on the same batch and returns one
+  embedding per graph from each (`StreamOutputs.temporal`, `StreamOutputs.spatial`).
+- `save_checkpoint` / `load_checkpoint` store the weights, scaler statistics and model config.
+
+Sizes, dropout and device are set in the `model` section of the config.
+
 ## Layout
 
 ```
