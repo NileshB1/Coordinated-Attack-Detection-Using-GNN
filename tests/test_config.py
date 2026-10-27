@@ -149,3 +149,13 @@ def test_graph_section(tmp_path):
     assert config.graph.min_episode_events == 3
     with pytest.raises(ConfigError, match="min_episode_events"):
         load_config(write(tmp_path, "graph:\n  min_episode_events: 0\n"))
+
+
+def test_model_section(tmp_path):
+    model = load_config(REPO_ROOT / "configs" / "default.yaml").model
+    assert (model.hidden_dim, model.temporal_dim, model.spatial_dim) == (64, 64, 64)
+    assert model.device == "auto"
+    config = load_config(write(tmp_path, "model:\n  hidden_dim: 32\n  device: cpu\n"))
+    assert (config.model.hidden_dim, config.model.device) == (32, "cpu")
+    with pytest.raises(ConfigError, match="unknown key"):
+        load_config(write(tmp_path, "model:\n  layers: 3\n"))

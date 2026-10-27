@@ -23,3 +23,11 @@ generator:
 # Episode graph construction.
 graph:
   min_episode_events: 2
+
+# Dual-stream model. Each stream returns one embedding per episode graph.
+model:
+  hidden_dim: 64
+  temporal_dim: 64
+  spatial_dim: 64
+  dropout: 0.1
+  device: auto

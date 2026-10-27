@@ -83,12 +83,33 @@ class GraphConfig:
 
 
 @dataclass(frozen=True)
+class ModelConfig:
+    hidden_dim: int = 64
+    temporal_dim: int = 64
+    spatial_dim: int = 64
+    dropout: float = 0.1
+    device: str = "auto"
+
+    def __post_init__(self) -> None:
+        for name in ("hidden_dim", "temporal_dim", "spatial_dim"):
+            _check_int(getattr(self, name), name, minimum=1)
+        _check_number(self.dropout, "dropout")
+        if not 0 <= self.dropout < 1:
+            raise ConfigError(f"dropout must be in [0, 1), got {self.dropout}")
+        if not isinstance(self.device, str) or not (
+            self.device in ("auto", "cpu", "cuda") or self.device.startswith("cuda:")
+        ):
+            raise ConfigError(f"device must be auto, cpu, cuda or cuda:N, got {self.device!r}")
+
+
+@dataclass(frozen=True)
 class Config:
     seed: int
     log_level: str
     paths: PathsConfig
     generator: GeneratorConfig = field(default_factory=GeneratorConfig)
     graph: GraphConfig = field(default_factory=GraphConfig)
+    model: ModelConfig = field(default_factory=ModelConfig)
 
 
 DEFAULTS: dict[str, Any] = {
@@ -100,6 +121,7 @@ DEFAULTS: dict[str, Any] = {
     },
     "generator": {f.name: f.default for f in fields(GeneratorConfig)},
     "graph": {f.name: f.default for f in fields(GraphConfig)},
+    "model": {f.name: f.default for f in fields(ModelConfig)},
 }
 
 
@@ -135,6 +157,7 @@ def parse_config(raw: dict[str, Any], base_dir: Path) -> Config:
         ),
         generator=GeneratorConfig(**data["generator"]),
         graph=GraphConfig(**data["graph"]),
+        model=ModelConfig(**data["model"]),
     )
 
 
