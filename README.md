@@ -107,15 +107,31 @@ Features are not scaled here; scaling is fitted on the training split later.
 
 Sizes, dropout and device are set in the `model` section of the config.
 
+### Temporal severity stream
+
+`cadgnn.temporal.TemporalSeverityStream` reads each episode's flagged events in time order.
+Every step is the event's scaled telemetry plus `log1p` of the hours since the episode's first
+event and of the hours since the previous event. A forward-only GRU runs over the steps, so the
+state after event t depends only on events up to t; the episode vector combines the last state
+with the mean state. There are no severity labels in the data, so the stream has no severity
+target of its own and learns through the episode label. Missing, negative or decreasing event
+times are rejected.
+
 ## Layout
 
 ```
 run_generator.py      entry point for the random anomaly generator
 run_graph_builder.py  entry point for building the episode graphs
-configs/      run configurations
-notebooks/    reference notebook for the random anomaly generator (kept unchanged)
-src/cadgnn/   package source
-tests/        pytest suite
+configs/              run configurations
+notebooks/            reference notebook for the random anomaly generator (kept unchanged)
+src/cadgnn/
+  data/               dataset checks and generator calibration
+  generator/          synthetic infrastructure, events and output files
+  graph/              heterogeneous episode graph construction
+  models/             batching, feature scaling, node encoder, dual-stream container
+  temporal/           temporal severity stream
+  config.py, cli.py   configuration and command line
+tests/                pytest suite
 ```
 
 ## Tests
