@@ -3,14 +3,14 @@ import struct
 import pandas as pd
 import pytest
 
-from cadgnn.calibration import (
+from cadgnn.data.calibration import (
     FSL_FALLBACK_FILE_COUNT, CalibrationError,
     FeatureProfile,  build_param_profile,
     calibrate, check_score_separation,
     read_fsl_snapshots, read_napierone,
     weighted_score
 )
-from cadgnn.datasets import FSL_HEADER_BYTES, DatasetError
+from cadgnn.data.datasets import FSL_HEADER_BYTES, DatasetError
 from conftest import REPO_ROOT
 
 REAL_DATASETS = REPO_ROOT / "datasets"

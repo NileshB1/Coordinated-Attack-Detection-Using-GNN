@@ -30,7 +30,7 @@ def test_clean_generator_output_passes_unchanged(events, infra):
 
 
 def test_round_trip_through_csv(tmp_path, small_dataset, fake_datasets, infra):
-    from cadgnn.calibration import calibrate
+    from cadgnn.data.calibration import calibrate
 
     paths = save_outputs(small_dataset, calibrate(fake_datasets), tmp_path)
     loaded = clean_events(load_events(paths["telemetry"]), infra)

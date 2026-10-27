@@ -12,7 +12,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from cadgnn.datasets import (
+from cadgnn.data.datasets import (
     FSL_HEADER_BYTES,
     FSL_PATTERN,
     NAPIERONE_FILE,

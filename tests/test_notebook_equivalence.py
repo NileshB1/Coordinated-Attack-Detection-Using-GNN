@@ -4,7 +4,7 @@ import sys
 import pandas as pd
 import pytest
 
-from cadgnn.calibration import calibrate
+from cadgnn.data.calibration import calibrate
 from cadgnn.config import GeneratorConfig
 from cadgnn.generator import generate
 from conftest import REPO_ROOT

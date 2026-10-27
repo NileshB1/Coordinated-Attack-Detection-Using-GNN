@@ -1,6 +1,6 @@
 import pytest
 
-from cadgnn.datasets import DatasetError, inspect_datasets, require_datasets
+from cadgnn.data.datasets import DatasetError, inspect_datasets, require_datasets
 from conftest import REPO_ROOT
 
 

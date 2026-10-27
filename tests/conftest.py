@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from cadgnn.datasets import FSL_HEADER_BYTES, NAPIERONE_FILE, RANSAP_TRACES
+from cadgnn.data.datasets import FSL_HEADER_BYTES, NAPIERONE_FILE, RANSAP_TRACES
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -45,7 +45,7 @@ def fake_datasets(tmp_path: Path) -> Path:
 @pytest.fixture(scope="session")
 def small_dataset():
     """A small generated scenario (60 VMs, 18 episodes) with a fixed, simple profile."""
-    from cadgnn.calibration import FeatureProfile
+    from cadgnn.data.calibration import FeatureProfile
     from cadgnn.config import GeneratorConfig
     from cadgnn.generator import generate
 

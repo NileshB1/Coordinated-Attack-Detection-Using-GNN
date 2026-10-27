@@ -6,9 +6,9 @@ import sys
 import warnings
 
 from cadgnn import __version__
-from cadgnn.calibration import CalibrationError, calibrate, check_score_separation
+from cadgnn.data.calibration import CalibrationError, calibrate, check_score_separation
 from cadgnn.config import Config, ConfigError, describe, load_config, with_overrides
-from cadgnn.datasets import DatasetError, inspect_datasets
+from cadgnn.data.datasets import DatasetError, inspect_datasets
 from cadgnn.generator import generate, save_outputs
 from cadgnn.logging_utils import setup_logging
 

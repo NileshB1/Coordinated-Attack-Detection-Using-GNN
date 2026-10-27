@@ -8,7 +8,7 @@ import pytest
 import torch
 from torch_geometric.loader import DataLoader
 
-from cadgnn.calibration import calibrate
+from cadgnn.data.calibration import calibrate
 from cadgnn.cli import main
 from cadgnn.generator import save_outputs
 from cadgnn.graph import (

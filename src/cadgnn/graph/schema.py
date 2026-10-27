@@ -8,7 +8,7 @@ a reverse edge type so messages can flow both ways.
 
 from __future__ import annotations
 
-from cadgnn.calibration import FEATURES
+from cadgnn.data.calibration import FEATURES
 from cadgnn.generator import NODE_KINDS
 
 NODE_TYPES = NODE_KINDS

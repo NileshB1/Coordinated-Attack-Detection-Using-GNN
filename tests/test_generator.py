@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from cadgnn.calibration import FeatureProfile, calibrate
+from cadgnn.data.calibration import FeatureProfile, calibrate
 from cadgnn.config import GeneratorConfig
 from cadgnn.generator import (
     EVENT_COLUMNS,  LABELS,
