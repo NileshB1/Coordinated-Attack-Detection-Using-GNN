@@ -29,5 +29,6 @@ model:
   hidden_dim: 64
   temporal_dim: 64
   spatial_dim: 64
+  temporal_layers: 1
   dropout: 0.1
   device: auto
