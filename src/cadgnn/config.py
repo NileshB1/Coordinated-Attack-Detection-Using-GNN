@@ -12,6 +12,7 @@ from typing import Any
 import yaml
 
 LOG_LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
+FUSION_METHODS = ("gated", "concat")
 
 class ConfigError(ValueError):
     pass
@@ -90,15 +91,28 @@ class ModelConfig:
     temporal_layers: int = 1
     spatial_layers: int = 2
     spatial_heads: int = 2
+    # Turning a stream off is how the single-stream baselines are run.
+    use_temporal: bool = True
+    use_spatial: bool = True
+    fusion: str = "gated"
+    fusion_dim: int = 64
     dropout: float = 0.1
     device: str = "auto"
 
     def __post_init__(self) -> None:
         for name in (
             "hidden_dim", "temporal_dim", "spatial_dim",
-            "temporal_layers", "spatial_layers", "spatial_heads",
+            "temporal_layers", "spatial_layers", "spatial_heads", "fusion_dim",
         ):  # fmt: skip
             _check_int(getattr(self, name), name, minimum=1)
+        for name in ("use_temporal", "use_spatial"):
+            if not isinstance(getattr(self, name), bool):
+                raise ConfigError(f"{name} must be true or false, got {getattr(self, name)!r}")
+        if not (self.use_temporal or self.use_spatial):
+            raise ConfigError("at least one of use_temporal and use_spatial must be true")
+        if self.fusion not in FUSION_METHODS:
+            methods = ", ".join(FUSION_METHODS)
+            raise ConfigError(f"fusion must be one of {methods}, got {self.fusion!r}")
         _check_number(self.dropout, "dropout")
         if not 0 <= self.dropout < 1:
             raise ConfigError(f"dropout must be in [0, 1), got {self.dropout}")

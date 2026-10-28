@@ -32,5 +32,9 @@ model:
   temporal_layers: 1
   spatial_layers: 2
   spatial_heads: 2
+  use_temporal: true
+  use_spatial: true
+  fusion: gated         # gated or concat
+  fusion_dim: 64
   dropout: 0.1
   device: auto
