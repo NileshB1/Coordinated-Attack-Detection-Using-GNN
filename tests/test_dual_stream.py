@@ -198,3 +198,12 @@ def test_cuda_requested_without_cuda():
 def test_model_config_validation(kwargs, message):
     with pytest.raises(ConfigError, match=message):
         ModelConfig(**kwargs)
+
+
+def test_a_stream_can_be_switched_off(graphs):
+    model = DualStreamModel(CONFIG, None, PoolingStream(12, ("vm",))).fit_scaler(graphs)
+    out = model(collate(graphs[:3]))
+    assert out.temporal is None
+    assert out.spatial.shape == (3, 12)
+    with pytest.raises(ModelInputError, match="at least one stream"):
+        DualStreamModel(CONFIG, None, None)

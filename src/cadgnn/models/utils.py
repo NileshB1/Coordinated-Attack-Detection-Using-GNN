@@ -7,9 +7,9 @@ from typing import Any
 
 import numpy as np
 import torch
+from torch import nn
 
 from cadgnn import __version__
-from cadgnn.models.dual_stream import DualStreamModel
 from cadgnn.models.inputs import ModelInputError
 
 
@@ -28,7 +28,7 @@ def resolve_device(name: str = "auto") -> torch.device:
     return device
 
 
-def save_checkpoint(model: DualStreamModel, path: str | Path, **extra: Any) -> None:
+def save_checkpoint(model: nn.Module, path: str | Path, **extra: Any) -> None:
     """Save weights, scaler statistics and model config. ``extra`` must hold plain values."""
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -44,7 +44,7 @@ def save_checkpoint(model: DualStreamModel, path: str | Path, **extra: Any) -> N
 
 
 def load_checkpoint(
-    model: DualStreamModel, path: str | Path, map_location: str | torch.device = "cpu"
+    model: nn.Module, path: str | Path, map_location: str | torch.device = "cpu"
 ) -> dict[str, Any]:
     path = Path(path)
     if not path.is_file():

@@ -3,7 +3,8 @@
 A stream is any ``nn.Module`` with an ``out_dim`` attribute whose forward takes
 a batch of episode graphs (VM features already scaled) and returns a tensor of
 shape [num_graphs, out_dim]. The two outputs are returned separately; combining
-them is the job of the fusion layer.
+them is the job of the fusion layer. Passing None for a stream switches it off
+and its output comes back as None.
 """
 
 from __future__ import annotations
@@ -21,17 +22,23 @@ from cadgnn.models.inputs import FeatureScaler, ModelInputError, check_batch
 
 
 class StreamOutputs(NamedTuple):
-    temporal: Tensor
-    spatial: Tensor
+    temporal: Tensor | None
+    spatial: Tensor | None
 
 
 class DualStreamModel(nn.Module):
-    def __init__(self, config: ModelConfig, temporal: nn.Module, spatial: nn.Module) -> None:
+    def __init__(
+        self, config: ModelConfig, temporal: nn.Module | None, spatial: nn.Module | None
+    ) -> None:
         super().__init__()
+        if temporal is None and spatial is None:
+            raise ModelInputError("at least one stream is needed")
         for name, stream, expected in (
             ("temporal", temporal, config.temporal_dim),
             ("spatial", spatial, config.spatial_dim),
         ):
+            if stream is None:
+                continue
             out_dim = getattr(stream, "out_dim", None)
             if out_dim != expected:
                 raise ModelInputError(
@@ -52,10 +59,13 @@ class DualStreamModel(nn.Module):
         scaled = copy.copy(batch)
         scaled["vm"].x = self.scaler(batch["vm"].x)
 
-        temporal = self.temporal(scaled)
-        spatial = self.spatial(scaled)
-        _check_output(temporal, "temporal", batch.num_graphs, self.config.temporal_dim)
-        _check_output(spatial, "spatial", batch.num_graphs, self.config.spatial_dim)
+        temporal = spatial = None
+        if self.temporal is not None:
+            temporal = self.temporal(scaled)
+            _check_output(temporal, "temporal", batch.num_graphs, self.config.temporal_dim)
+        if self.spatial is not None:
+            spatial = self.spatial(scaled)
+            _check_output(spatial, "spatial", batch.num_graphs, self.config.spatial_dim)
         return StreamOutputs(temporal, spatial)
 
 
