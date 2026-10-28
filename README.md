@@ -129,6 +129,23 @@ Only VM telemetry and graph structure are used: event times, labels, episode ids
 indices are not inputs, and the graph has no edge attributes. Layers and attention heads are set
 by `spatial_layers` and `spatial_heads` in the config.
 
+### Fusion and coordination output
+
+`cadgnn.fusion.build_coordination_model(config)` builds the full model: both streams, a fusion
+layer and a classifier that gives one logit per episode for coordinated (1) against
+coincidental (0).
+
+- `fusion: gated` (default) is a gated multimodal unit (Arevalo et al., 2017, *Gated Multimodal
+  Units for Information Fusion*). The two embeddings come from different views, so each is
+  projected to `fusion_dim` and a learned gate decides per episode how much each contributes.
+  The mean gate value is returned as the temporal share of the decision.
+- `fusion: concat` concatenates the embeddings and projects them; it is the fusion baseline.
+- `use_temporal: false` or `use_spatial: false` runs a single-stream baseline for ablation.
+
+`sigmoid(logit)` (`CoordinationModel.score`) is an uncalibrated coordination score, not a
+probability; the decision threshold is chosen during evaluation. `coordination_loss` is binary
+cross-entropy, and `positive_weight` sets its class weight from the training labels only.
+
 ## Layout
 
 ```
@@ -143,6 +160,7 @@ src/cadgnn/
   models/             batching, feature scaling, node encoder, dual-stream container
   temporal/           temporal severity stream
   spatial/            spatial topology stream
+  fusion/             fusion layers, coordination model and loss
   config.py, cli.py   configuration and command line
 tests/                pytest suite
 ```
