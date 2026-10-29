@@ -13,6 +13,7 @@ import yaml
 
 LOG_LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
 FUSION_METHODS = ("gated", "concat")
+THRESHOLD_STRATEGIES = ("f1", "fpr")
 
 class ConfigError(ValueError):
     pass
@@ -123,6 +124,38 @@ class ModelConfig:
 
 
 @dataclass(frozen=True)
+class TrainingConfig:
+    val_fraction: float = 0.2
+    test_fraction: float = 0.2
+    epochs: int = 100
+    batch_size: int = 16
+    learning_rate: float = 1e-3
+    weight_decay: float = 1e-4
+    # Stop when validation loss has not improved for this many epochs.
+    patience: int = 15
+    # f1: best F1 on validation. fpr: best recall with validation FPR <= max_fpr.
+    threshold_strategy: str = "f1"
+    max_fpr: float = 0.1
+
+    def __post_init__(self) -> None:
+        for name in ("epochs", "batch_size", "patience"):
+            _check_int(getattr(self, name), name, minimum=1)
+        for name in ("val_fraction", "test_fraction", "learning_rate", "weight_decay", "max_fpr"):
+            _check_number(getattr(self, name), name)
+        if not (0 < self.val_fraction < 1 and 0 < self.test_fraction < 1):
+            raise ConfigError("val_fraction and test_fraction must be between 0 and 1")
+        if self.val_fraction + self.test_fraction >= 1:
+            raise ConfigError("val_fraction + test_fraction must leave some training data")
+        if self.learning_rate <= 0 or self.weight_decay < 0:
+            raise ConfigError("learning_rate must be positive and weight_decay non-negative")
+        if not 0 <= self.max_fpr <= 1:
+            raise ConfigError(f"max_fpr must be in [0, 1], got {self.max_fpr}")
+        if self.threshold_strategy not in THRESHOLD_STRATEGIES:
+            strategies = ", ".join(THRESHOLD_STRATEGIES)
+            raise ConfigError(f"threshold_strategy must be one of {strategies}")
+
+
+@dataclass(frozen=True)
 class Config:
     seed: int
     log_level: str
@@ -130,6 +163,7 @@ class Config:
     generator: GeneratorConfig = field(default_factory=GeneratorConfig)
     graph: GraphConfig = field(default_factory=GraphConfig)
     model: ModelConfig = field(default_factory=ModelConfig)
+    training: TrainingConfig = field(default_factory=TrainingConfig)
 
 
 DEFAULTS: dict[str, Any] = {
@@ -142,6 +176,7 @@ DEFAULTS: dict[str, Any] = {
     "generator": {f.name: f.default for f in fields(GeneratorConfig)},
     "graph": {f.name: f.default for f in fields(GraphConfig)},
     "model": {f.name: f.default for f in fields(ModelConfig)},
+    "training": {f.name: f.default for f in fields(TrainingConfig)},
 }
 
 
@@ -178,6 +213,7 @@ def parse_config(raw: dict[str, Any], base_dir: Path) -> Config:
         generator=GeneratorConfig(**data["generator"]),
         graph=GraphConfig(**data["graph"]),
         model=ModelConfig(**data["model"]),
+        training=TrainingConfig(**data["training"]),
     )
 
 

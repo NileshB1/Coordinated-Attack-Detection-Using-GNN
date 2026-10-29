@@ -159,3 +159,27 @@ def test_model_section(tmp_path):
     assert (config.model.hidden_dim, config.model.device) == (32, "cpu")
     with pytest.raises(ConfigError, match="unknown key"):
         load_config(write(tmp_path, "model:\n  layers: 3\n"))
+
+
+def test_training_section(tmp_path):
+    training = load_config(REPO_ROOT / "configs" / "default.yaml").training
+    assert (training.val_fraction, training.test_fraction) == (0.2, 0.2)
+    assert training.threshold_strategy == "f1"
+    config = load_config(write(tmp_path, "training:\n  epochs: 5\n  threshold_strategy: fpr\n"))
+    assert (config.training.epochs, config.training.threshold_strategy) == (5, "fpr")
+
+
+@pytest.mark.parametrize(
+    "text, message",
+    [
+        ("training:\n  val_fraction: 0.6\n  test_fraction: 0.5\n", "leave some training"),
+        ("training:\n  test_fraction: 0\n", "between 0 and 1"),
+        ("training:\n  learning_rate: 0\n", "learning_rate"),
+        ("training:\n  max_fpr: 1.5\n", "max_fpr"),
+        ("training:\n  threshold_strategy: youden\n", "threshold_strategy"),
+        ("training:\n  epochs: 0\n", "epochs"),
+    ],
+)
+def test_invalid_training_section(tmp_path, text, message):
+    with pytest.raises(ConfigError, match=message):
+        load_config(write(tmp_path, text))

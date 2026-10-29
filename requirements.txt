@@ -4,3 +4,4 @@ pandas>=2.2
 PyYAML>=6.0
 torch>=2.2
 torch_geometric>=2.5
+scikit-learn>=1.3

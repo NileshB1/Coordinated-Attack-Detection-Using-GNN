@@ -38,3 +38,15 @@ model:
   fusion_dim: 64
   dropout: 0.1
   device: auto
+
+# Training and evaluation. The split is stratified by label and made per episode.
+training:
+  val_fraction: 0.2
+  test_fraction: 0.2
+  epochs: 100
+  batch_size: 16
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  patience: 15
+  threshold_strategy: f1   # f1 or fpr
+  max_fpr: 0.1             # only used with threshold_strategy: fpr
