@@ -6,8 +6,8 @@ import sys
 import warnings
 
 from cadgnn import __version__
-from cadgnn.data.calibration import CalibrationError, calibrate, check_score_separation
 from cadgnn.config import Config, ConfigError, describe, load_config, with_overrides
+from cadgnn.data.calibration import CalibrationError, calibrate, check_score_separation
 from cadgnn.data.datasets import DatasetError, inspect_datasets
 from cadgnn.generator import generate, save_outputs
 from cadgnn.logging_utils import setup_logging
@@ -33,6 +33,8 @@ def build_parser() -> argparse.ArgumentParser:
     commands.add_parser(
         "build-graphs", help="turn the generator output into one graph per anomaly episode"
     )
+    commands.add_parser("train", help="train the coordination model and pick the threshold")
+    commands.add_parser("evaluate", help="score the held-out test episodes and write the report")
     return parser
 
 
@@ -97,6 +99,55 @@ def cmd_build_graphs(config: Config) -> int:
     return 0
 
 
+def cmd_train(config: Config) -> int:
+    warnings.filterwarnings("ignore", message="`torch.jit.script` is deprecated")
+    from cadgnn.training import run_training
+
+    try:
+        summary = run_training(config)
+    except ValueError as exc:
+        log.error("%s", exc)
+        return 1
+
+    sizes, val = summary["split_sizes"], summary["val_metrics"]
+    print(f"split: {sizes['train']} train, {sizes['val']} validation, {sizes['test']} test")
+    print(f"trained {summary['epochs_run']} epochs, best at epoch {summary['best_epoch']}")
+    print(
+        f"threshold {summary['threshold']:.4f} (validation F1 {val['f1']:.3f}, "
+        f"FPR {val['false_positive_rate']:.3f})"
+    )
+    print(f"  wrote {summary['checkpoint']}")
+    return 0
+
+
+def cmd_evaluate(config: Config) -> int:
+    warnings.filterwarnings("ignore", message="`torch.jit.script` is deprecated")
+    from cadgnn.evaluation.run import run_evaluation
+
+    try:
+        evaluation = run_evaluation(config)
+    except ValueError as exc:
+        log.error("%s", exc)
+        return 1
+
+    test = evaluation["results"]["test_metrics"]
+    cm = test["confusion_matrix"]
+
+    def fmt(value):
+        return "n/a" if value is None else f"{value:.3f}"
+
+    print(f"test episodes: {test['n_episodes']} ({test['n_coordinated']} coordinated)")
+    print(
+        f"precision {fmt(test['precision'])}  recall {fmt(test['recall'])}  f1 {fmt(test['f1'])}  "
+        f"FPR {fmt(test['false_positive_rate'])}  FNR {fmt(test['false_negative_rate'])}"
+    )
+    print(f"ROC-AUC {fmt(test['roc_auc'])}  PR-AUC {fmt(test['pr_auc'])}")
+    print(f"confusion matrix: tp={cm['tp']} fp={cm['fp']} tn={cm['tn']} fn={cm['fn']}")
+    for path in evaluation["paths"].values():
+        print(f"  wrote {path}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
 
@@ -119,6 +170,10 @@ def main(argv: list[str] | None = None) -> int:
             return cmd_generate(config)
         if args.command == "build-graphs":
             return cmd_build_graphs(config)
+        if args.command == "train":
+            return cmd_train(config)
+        if args.command == "evaluate":
+            return cmd_evaluate(config)
     except (DatasetError, CalibrationError) as exc:
         log.error("%s", exc)
         return 1
