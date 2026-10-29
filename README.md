@@ -146,11 +146,47 @@ coincidental (0).
 probability; the decision threshold is chosen during evaluation. `coordination_loss` is binary
 cross-entropy, and `positive_weight` sets its class weight from the training labels only.
 
+## Training and evaluation
+
+```bash
+python run_training.py
+python run_evaluation.py
+```
+
+`run_training.py` reads `episode_graphs.pt`, makes a stratified train / validation / test split
+by episode (`val_fraction`, `test_fraction`), fits the feature scaler and class weight on the
+training part, trains with Adam and early stopping on validation loss, and picks the decision
+threshold on the validation part:
+
+- `threshold_strategy: f1` takes the best validation F1;
+- `threshold_strategy: fpr` takes the best validation recall with false positive rate at most
+  `max_fpr`, for settings where alert fatigue matters more than missed campaigns.
+
+Candidate thresholds are midpoints between validation scores, and among equally good ones the
+middle one is used. The checkpoint (`model/coordination_model.pt`) stores the weights, scaler,
+model and training config, seed, threshold and the episode ids of each split.
+
+`run_evaluation.py` loads that checkpoint, scores only the test episodes once and writes to
+`evaluation/`:
+
+| File | Contents |
+| --- | --- |
+| `metrics.json` | precision, recall, F1, FPR, FNR, balanced accuracy, ROC-AUC, PR-AUC, confusion matrix, time to detect, gate summary, config and split sizes |
+| `decisions.json` | per test episode: score, threshold, decision, true label, temporal share, VMs in event order, time window, shared networks and storage, and for flagged episodes the step-by-step propagation evidence |
+| `decision_report.md` | the same results as a readable report |
+
+Time to detect replays each coordinated test episode event by event and records when its score
+first reaches the threshold. Structural path similarity, severity metrics and probability
+calibration are not evaluated; the report lists why. Scores are uncalibrated, and all results
+come from synthetic episodes.
+
 ## Layout
 
 ```
 run_generator.py      entry point for the random anomaly generator
 run_graph_builder.py  entry point for building the episode graphs
+run_training.py       entry point for training and threshold selection
+run_evaluation.py     entry point for the held-out evaluation and decision report
 configs/              run configurations
 notebooks/            reference notebook for the random anomaly generator (kept unchanged)
 src/cadgnn/
@@ -161,6 +197,8 @@ src/cadgnn/
   temporal/           temporal severity stream
   spatial/            spatial topology stream
   fusion/             fusion layers, coordination model and loss
+  training/           stratified split, training loop, training run
+  evaluation/         metrics, thresholds, time to detect, decision report
   config.py, cli.py   configuration and command line
 tests/                pytest suite
 ```
