@@ -1,4 +1,4 @@
-1. (.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>pip install -r requirements.txt
+1. (.venv) <project>>pip install -r requirements.txt
 2. python run_generator.py
 3. python run_graph_builder.py
 4. # For Demo
@@ -9,17 +9,17 @@
 
 Find below commands run on actual setup:
 
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>pip install -r requirements.txt
-Requirement already satisfied: networkx>=3.2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 1)) (3.7)
-Requirement already satisfied: numpy>=1.26 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 2)) (2.5.4)
-Requirement already satisfied: pandas>=2.2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 3)) (3.0.6)
-Requirement already satisfied: PyYAML>=6.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 4)) (6.0.3)
+(.venv) <project>>pip install -r requirements.txt
+Requirement already satisfied: networkx>=3.2 in <project>\.venv\lib\site-packages (from -r requirements.txt (line 1)) (3.7)
+Requirement already satisfied: numpy>=1.26 in <project>\.venv\lib\site-packages (from -r requirements.txt (line 2)) (2.5.4)
+Requirement already satisfied: pandas>=2.2 in <project>\.venv\lib\site-packages (from -r requirements.txt (line 3)) (3.0.6)
+Requirement already satisfied: PyYAML>=6.0 in <project>\.venv\lib\site-packages (from -r requirements.txt (line 4)) (6.0.3)
 Collecting torch>=2.2 (from -r requirements.txt (line 5))
   Using cached torch-2.14.1-cp312-cp312-win_amd64.whl.metadata (38 kB)
 Collecting torch_geometric>=2.5 (from -r requirements.txt (line 6))
   Using cached torch_geometric-2.8.1-py3-none-any.whl.metadata (64 kB)
-Requirement already satisfied: python-dateutil>=2.8.2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from pandas>=2.2->-r requirements.txt (line 3)) (2.9.0.post0)
-Requirement already satisfied: tzdata in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from pandas>=2.2->-r requirements.txt (line 3)) (2026.5)
+Requirement already satisfied: python-dateutil>=2.8.2 in <project>\.venv\lib\site-packages (from pandas>=2.2->-r requirements.txt (line 3)) (2.9.0.post0)
+Requirement already satisfied: tzdata in <project>\.venv\lib\site-packages (from pandas>=2.2->-r requirements.txt (line 3)) (2026.5)
 Collecting filelock (from torch>=2.2->-r requirements.txt (line 5))
   Using cached filelock-4.2.4-py3-none-any.whl.metadata (2.0 kB)
 Collecting typing-extensions>=4.10.0 (from torch>=2.2->-r requirements.txt (line 5))
@@ -44,7 +44,7 @@ Collecting tqdm (from torch_geometric>=2.5->-r requirements.txt (line 6))
   Using cached tqdm-4.70.1-py3-none-any.whl.metadata (57 kB)
 Collecting xxhash (from torch_geometric>=2.5->-r requirements.txt (line 6))
   Using cached xxhash-4.0.2-cp312-cp312-win_amd64.whl.metadata (18 kB)
-Requirement already satisfied: six>=1.5 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from python-dateutil>=2.8.2->pandas>=2.2->-r requirements.txt (line 3)) (1.17.0)
+Requirement already satisfied: six>=1.5 in <project>\.venv\lib\site-packages (from python-dateutil>=2.8.2->pandas>=2.2->-r requirements.txt (line 3)) (1.17.0)
 Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch>=2.2->-r requirements.txt (line 5))
   Using cached mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
 Collecting aiohappyeyeballs>=2.5.0 (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6))
@@ -108,31 +108,31 @@ Successfully installed MarkupSafe-3.0.4 aiohappyeyeballs-2.7.1 aiohttp-3.14.5 ai
 [notice] A new release of pip is available: 24.0 -> 26.2.2
 [notice] To update, run: python.exe -m pip install --upgrade pip
 
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python run_generator.py
-2026-10-28 00:21:01 INFO    cadgnn: configuration: seed=8304 log_level=INFO datasets_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\datasets output_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output
+(.venv) <project>>
+(.venv) <project>>python run_generator.py
+2026-10-28 00:21:01 INFO    cadgnn: configuration: seed=8304 log_level=INFO datasets_dir=<project>\datasets output_dir=<project>\output
 2026-10-28 00:21:04 INFO    cadgnn: mean weighted score: benign 0.273, infected 0.347
 2026-10-28 00:21:05 INFO    cadgnn.generator: generated 72739 events on 24500 nodes / 36000 edges (seed 8304)
 72739 events: none=72000, coincidental=456, coordinated=283
-  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\synthetic_backup_telemetry.csv
-  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\infrastructure_graph_nodes.csv
-  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\infrastructure_graph_edges.csv
-  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\experiment_manifest.json
+  wrote <project>\output\synthetic_backup_telemetry.csv
+  wrote <project>\output\infrastructure_graph_nodes.csv
+  wrote <project>\output\infrastructure_graph_edges.csv
+  wrote <project>\output\experiment_manifest.json
 
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python run_graph_builder.py
-2026-10-28 00:21:26 INFO    cadgnn: configuration: seed=8304 log_level=INFO datasets_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\datasets output_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output
+(.venv) <project>>python run_graph_builder.py
+2026-10-28 00:21:26 INFO    cadgnn: configuration: seed=8304 log_level=INFO datasets_dir=<project>\datasets output_dir=<project>\output
 150 episode graphs from 72739 events
                   episodes  mean_vms  mean_networks  mean_components  mean_span_hours
 y
 coincidental (0)       100      4.56           4.55              4.5            43.90
 coordinated (1)         50      5.66           1.00              1.0             1.92
-  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\episode_graphs.pt
-  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\output\episode_summary.csv
+  wrote <project>\output\episode_graphs.pt
+  wrote <project>\output\episode_summary.csv
 
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python -c "import sys; sys.path.insert(0, 'src'); from cadgnn.graph import load_episode_graphs; g = load_episode_graphs('output/episode_graphs.pt'); print(len(g)); print(g[0]); print(g[0]['vm'].x)"
-D:\raw-data\NCI\Projects-Sem-III\Thesis Code\.venv\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+(.venv) <project>>
+(.venv) <project>>
+(.venv) <project>>python -c "import sys; sys.path.insert(0, 'src'); from cadgnn.graph import load_episode_graphs; g = load_episode_graphs('output/episode_graphs.pt'); print(len(g)); print(g[0]); print(g[0]['vm'].x)"
+<project>\.venv\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
   warnings.warn(
 150
 HeteroData(
@@ -171,35 +171,35 @@ tensor([[0.2247, 0.4276, 0.7366, 0.9273],
         [0.6319, 0.5533, 0.7845, 1.4257],
         [0.8208, 0.6219, 0.6608, 1.4934]])
 
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>pip install -r requirements-dev.txt
-Requirement already satisfied: networkx>=3.2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 1)) (3.7)
-Requirement already satisfied: numpy>=1.26 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 2)) (2.5.4)
-Requirement already satisfied: pandas>=2.2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 3)) (3.0.6)
-Requirement already satisfied: PyYAML>=6.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 4)) (6.0.3)
-Requirement already satisfied: torch>=2.2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 5)) (2.14.1)
-Requirement already satisfied: torch_geometric>=2.5 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from -r requirements.txt (line 6)) (2.8.1)
+(.venv) <project>>
+(.venv) <project>>pip install -r requirements-dev.txt
+Requirement already satisfied: networkx>=3.2 in <project>\.venv\lib\site-packages (from -r requirements.txt (line 1)) (3.7)
+Requirement already satisfied: numpy>=1.26 in <project>\.venv\lib\site-packages (from -r requirements.txt (line 2)) (2.5.4)
+Requirement already satisfied: pandas>=2.2 in <project>\.venv\lib\site-packages (from -r requirements.txt (line 3)) (3.0.6)
+Requirement already satisfied: PyYAML>=6.0 in <project>\.venv\lib\site-packages (from -r requirements.txt (line 4)) (6.0.3)
+Requirement already satisfied: torch>=2.2 in <project>\.venv\lib\site-packages (from -r requirements.txt (line 5)) (2.14.1)
+Requirement already satisfied: torch_geometric>=2.5 in <project>\.venv\lib\site-packages (from -r requirements.txt (line 6)) (2.8.1)
 Collecting pytest>=8.0 (from -r requirements-dev.txt (line 2))
   Using cached pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
 Collecting ruff>=0.6 (from -r requirements-dev.txt (line 3))
   Downloading ruff-0.17.3-py3-none-win_amd64.whl.metadata (21 kB)
 Collecting matplotlib>=3.8 (from -r requirements-dev.txt (line 4))
   Using cached matplotlib-3.11.2-cp312-cp312-win_amd64.whl.metadata (80 kB)
-Requirement already satisfied: python-dateutil>=2.8.2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from pandas>=2.2->-r requirements.txt (line 3)) (2.9.0.post0)
-Requirement already satisfied: tzdata in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from pandas>=2.2->-r requirements.txt (line 3)) (2026.5)
-Requirement already satisfied: filelock in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (4.2.4)
-Requirement already satisfied: typing-extensions>=4.10.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (4.16.0)
-Requirement already satisfied: setuptools>=77.0.3 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (84.2.1)
-Requirement already satisfied: sympy>=1.13.3 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (1.14.0)
-Requirement already satisfied: jinja2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (3.1.6)
-Requirement already satisfied: fsspec>=0.8.5 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (2026.9.0)
-Requirement already satisfied: aiohttp in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (3.14.5)
-Requirement already satisfied: psutil>=5.8.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (7.2.2)
-Requirement already satisfied: pyparsing in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (3.3.3)
-Requirement already satisfied: requests in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (2.34.2)
-Requirement already satisfied: tqdm in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (4.70.1)
-Requirement already satisfied: xxhash in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (4.0.2)
-Requirement already satisfied: colorama>=0.4 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from pytest>=8.0->-r requirements-dev.txt (line 2)) (0.4.6)
+Requirement already satisfied: python-dateutil>=2.8.2 in <project>\.venv\lib\site-packages (from pandas>=2.2->-r requirements.txt (line 3)) (2.9.0.post0)
+Requirement already satisfied: tzdata in <project>\.venv\lib\site-packages (from pandas>=2.2->-r requirements.txt (line 3)) (2026.5)
+Requirement already satisfied: filelock in <project>\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (4.2.4)
+Requirement already satisfied: typing-extensions>=4.10.0 in <project>\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (4.16.0)
+Requirement already satisfied: setuptools>=77.0.3 in <project>\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (84.2.1)
+Requirement already satisfied: sympy>=1.13.3 in <project>\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (1.14.0)
+Requirement already satisfied: jinja2 in <project>\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (3.1.6)
+Requirement already satisfied: fsspec>=0.8.5 in <project>\.venv\lib\site-packages (from torch>=2.2->-r requirements.txt (line 5)) (2026.9.0)
+Requirement already satisfied: aiohttp in <project>\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (3.14.5)
+Requirement already satisfied: psutil>=5.8.0 in <project>\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (7.2.2)
+Requirement already satisfied: pyparsing in <project>\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (3.3.3)
+Requirement already satisfied: requests in <project>\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (2.34.2)
+Requirement already satisfied: tqdm in <project>\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (4.70.1)
+Requirement already satisfied: xxhash in <project>\.venv\lib\site-packages (from torch_geometric>=2.5->-r requirements.txt (line 6)) (4.0.2)
+Requirement already satisfied: colorama>=0.4 in <project>\.venv\lib\site-packages (from pytest>=8.0->-r requirements-dev.txt (line 2)) (0.4.6)
 Collecting iniconfig>=1.0.1 (from pytest>=8.0->-r requirements-dev.txt (line 2))
   Using cached iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
 Collecting packaging>=22 (from pytest>=8.0->-r requirements-dev.txt (line 2))
@@ -219,20 +219,20 @@ Collecting kiwisolver>=1.3.1 (from matplotlib>=3.8->-r requirements-dev.txt (lin
   Using cached kiwisolver-1.5.1-cp312-cp312-win_amd64.whl.metadata (5.2 kB)
 Collecting pillow>=9 (from matplotlib>=3.8->-r requirements-dev.txt (line 4))
   Using cached pillow-13.0.0-cp312-cp312-win_amd64.whl.metadata (9.3 kB)
-Requirement already satisfied: six>=1.5 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from python-dateutil>=2.8.2->pandas>=2.2->-r requirements.txt (line 3)) (1.17.0)
-Requirement already satisfied: mpmath<1.4,>=1.1.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from sympy>=1.13.3->torch>=2.2->-r requirements.txt (line 5)) (1.3.0)
-Requirement already satisfied: aiohappyeyeballs>=2.5.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (2.7.1)
-Requirement already satisfied: aiosignal>=1.4.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (1.4.0)
-Requirement already satisfied: attrs>=17.3.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (26.1.0)
-Requirement already satisfied: frozenlist>=1.1.1 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (1.8.0)
-Requirement already satisfied: multidict<8.0,>=4.5 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (7.2.1)
-Requirement already satisfied: propcache>=0.2.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (0.5.4)
-Requirement already satisfied: yarl<2.0,>=1.25.1 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (1.25.1)
-Requirement already satisfied: MarkupSafe>=2.0 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from jinja2->torch>=2.2->-r requirements.txt (line 5)) (3.0.4)
-Requirement already satisfied: charset_normalizer<4,>=2 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from requests->torch_geometric>=2.5->-r requirements.txt (line 6)) (3.5.2)
-Requirement already satisfied: idna<4,>=2.5 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from requests->torch_geometric>=2.5->-r requirements.txt (line 6)) (3.20)
-Requirement already satisfied: urllib3<3,>=1.26 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from requests->torch_geometric>=2.5->-r requirements.txt (line 6)) (2.8.0)
-Requirement already satisfied: certifi>=2023.5.7 in d:\raw-data\nci\projects-sem-iii\thesis code\.venv\lib\site-packages (from requests->torch_geometric>=2.5->-r requirements.txt (line 6)) (2026.10.23)
+Requirement already satisfied: six>=1.5 in <project>\.venv\lib\site-packages (from python-dateutil>=2.8.2->pandas>=2.2->-r requirements.txt (line 3)) (1.17.0)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in <project>\.venv\lib\site-packages (from sympy>=1.13.3->torch>=2.2->-r requirements.txt (line 5)) (1.3.0)
+Requirement already satisfied: aiohappyeyeballs>=2.5.0 in <project>\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (2.7.1)
+Requirement already satisfied: aiosignal>=1.4.0 in <project>\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (1.4.0)
+Requirement already satisfied: attrs>=17.3.0 in <project>\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (26.1.0)
+Requirement already satisfied: frozenlist>=1.1.1 in <project>\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (1.8.0)
+Requirement already satisfied: multidict<8.0,>=4.5 in <project>\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (7.2.1)
+Requirement already satisfied: propcache>=0.2.0 in <project>\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (0.5.4)
+Requirement already satisfied: yarl<2.0,>=1.25.1 in <project>\.venv\lib\site-packages (from aiohttp->torch_geometric>=2.5->-r requirements.txt (line 6)) (1.25.1)
+Requirement already satisfied: MarkupSafe>=2.0 in <project>\.venv\lib\site-packages (from jinja2->torch>=2.2->-r requirements.txt (line 5)) (3.0.4)
+Requirement already satisfied: charset_normalizer<4,>=2 in <project>\.venv\lib\site-packages (from requests->torch_geometric>=2.5->-r requirements.txt (line 6)) (3.5.2)
+Requirement already satisfied: idna<4,>=2.5 in <project>\.venv\lib\site-packages (from requests->torch_geometric>=2.5->-r requirements.txt (line 6)) (3.20)
+Requirement already satisfied: urllib3<3,>=1.26 in <project>\.venv\lib\site-packages (from requests->torch_geometric>=2.5->-r requirements.txt (line 6)) (2.8.0)
+Requirement already satisfied: certifi>=2023.5.7 in <project>\.venv\lib\site-packages (from requests->torch_geometric>=2.5->-r requirements.txt (line 6)) (2026.10.23)
 Using cached pytest-9.1.1-py3-none-any.whl (386 kB)
 Downloading ruff-0.17.3-py3-none-win_amd64.whl (10.3 MB)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.3/10.3 MB 6.0 MB/s eta 0:00:00
@@ -253,13 +253,13 @@ Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 iniconfig-
 [notice] A new release of pip is available: 24.0 -> 26.2.2
 [notice] To update, run: python.exe -m pip install --upgrade pip
 
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>pytest tests/test_infrastructure_graph.py tests/test_graph_events.py tests/test_episode_graphs.py
+(.venv) <project>>
+(.venv) <project>>
+(.venv) <project>>
+(.venv) <project>>pytest tests/test_infrastructure_graph.py tests/test_graph_events.py tests/test_episode_graphs.py
 =================================================================== test session starts ===================================================================
 platform win32 -- Python 3.12.3, pytest-9.1.1, pluggy-1.7.0
-rootdir: D:\raw-data\NCI\Projects-Sem-III\Thesis Code
+rootdir: <project>
 configfile: pyproject.toml
 collected 54 items
 
@@ -269,28 +269,28 @@ tests\test_episode_graphs.py ..................                                 
 
 =================================================================== 54 passed in 10.00s ===================================================================
 
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python run_generator.py --seed 42 --output-dir runs\seed42
-2026-10-28 00:23:47 INFO    cadgnn: configuration: seed=42 log_level=INFO datasets_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\datasets output_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42
+(.venv) <project>>
+(.venv) <project>>
+(.venv) <project>>python run_generator.py --seed 42 --output-dir runs\seed42
+2026-10-28 00:23:47 INFO    cadgnn: configuration: seed=42 log_level=INFO datasets_dir=<project>\datasets output_dir=<project>\runs\seed42
 2026-10-28 00:23:48 INFO    cadgnn: mean weighted score: benign 0.276, infected 0.332
 2026-10-28 00:23:50 INFO    cadgnn.generator: generated 72753 events on 24500 nodes / 36000 edges (seed 42)
 72753 events: none=72000, coincidental=465, coordinated=288
-  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42\synthetic_backup_telemetry.csv
-  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42\infrastructure_graph_nodes.csv
-  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42\infrastructure_graph_edges.csv
-  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42\experiment_manifest.json
+  wrote <project>\runs\seed42\synthetic_backup_telemetry.csv
+  wrote <project>\runs\seed42\infrastructure_graph_nodes.csv
+  wrote <project>\runs\seed42\infrastructure_graph_edges.csv
+  wrote <project>\runs\seed42\experiment_manifest.json
 
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>python run_graph_builder.py --output-dir runs\seed42
-2026-10-28 00:23:59 INFO    cadgnn: configuration: seed=8304 log_level=INFO datasets_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\datasets output_dir=D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42
+(.venv) <project>>
+(.venv) <project>>
+(.venv) <project>>python run_graph_builder.py --output-dir runs\seed42
+2026-10-28 00:23:59 INFO    cadgnn: configuration: seed=8304 log_level=INFO datasets_dir=<project>\datasets output_dir=<project>\runs\seed42
 150 episode graphs from 72753 events
                   episodes  mean_vms  mean_networks  mean_components  mean_span_hours
 y
 coincidental (0)       100      4.65           4.64             4.63            43.97
 coordinated (1)         50      5.76           1.00             1.00             1.99
-  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42\episode_graphs.pt
-  wrote D:\raw-data\NCI\Projects-Sem-III\Thesis Code\runs\seed42\episode_summary.csv
+  wrote <project>\runs\seed42\episode_graphs.pt
+  wrote <project>\runs\seed42\episode_summary.csv
 
-(.venv) D:\raw-data\NCI\Projects-Sem-III\Thesis Code>
+(.venv) <project>>
