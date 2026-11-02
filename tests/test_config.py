@@ -4,7 +4,7 @@ import pytest
 
 from cadgnn.config import (
     DEFAULTS, ConfigError,
-    GeneratorConfig, load_config,
+    GeneratorConfig, describe, display_path, load_config,
     parse_config, with_overrides
 )
 from conftest import REPO_ROOT
@@ -183,3 +183,12 @@ def test_training_section(tmp_path):
 def test_invalid_training_section(tmp_path, text, message):
     with pytest.raises(ConfigError, match=message):
         load_config(write(tmp_path, text))
+
+
+def test_display_path_hides_the_local_folder(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    assert display_path(tmp_path / "output" / "model.pt") == str(Path("output") / "model.pt")
+    outside = tmp_path.parent / "elsewhere"
+    assert display_path(outside) == str(outside)
+    config = parse_config({}, base_dir=tmp_path)
+    assert str(tmp_path) not in describe(config)

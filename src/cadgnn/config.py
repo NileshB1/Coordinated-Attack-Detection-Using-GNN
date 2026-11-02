@@ -306,8 +306,20 @@ def _path(value: Any, base_dir: Path, name: str) -> Path:
     return path.resolve()
 
 
+def display_path(path: str | Path) -> str:
+    """Path relative to the working directory when it lies inside it.
+
+    Keeps the local folder layout (user name, drive) out of logs and saved results.
+    """
+    try:
+        return str(Path(path).resolve().relative_to(Path.cwd().resolve()))
+    except ValueError:
+        return str(path)
+
+
 def describe(config: Config) -> str:
     return (
         f"seed={config.seed} log_level={config.log_level} "
-        f"datasets_dir={config.paths.datasets_dir} output_dir={config.paths.output_dir}"
+        f"datasets_dir={display_path(config.paths.datasets_dir)} "
+        f"output_dir={display_path(config.paths.output_dir)}"
     )

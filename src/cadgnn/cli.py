@@ -4,9 +4,17 @@ import argparse
 import logging
 import sys
 import warnings
+from pathlib import Path
 
 from cadgnn import __version__
-from cadgnn.config import Config, ConfigError, describe, load_config, with_overrides
+from cadgnn.config import (
+    Config,
+    ConfigError,
+    describe,
+    display_path,
+    load_config,
+    with_overrides,
+)
 from cadgnn.data.calibration import CalibrationError, calibrate, check_score_separation
 from cadgnn.data.datasets import DatasetError, inspect_datasets
 from cadgnn.generator import generate, save_outputs
@@ -35,6 +43,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     commands.add_parser("train", help="train the coordination model and pick the threshold")
     commands.add_parser("evaluate", help="score the held-out test episodes and write the report")
+    experiment = commands.add_parser(
+        "experiment", help="compare model variants across generator scenarios and seeds"
+    )
+    experiment.add_argument("--spec", required=True, help="experiment spec YAML file")
+    experiment.add_argument("--out", help="where to write runs (default: <output_dir>/experiments)")
+    commands.add_parser("params", help="print the table of tunable settings")
     return parser
 
 
@@ -58,7 +72,7 @@ def cmd_generate(config: Config) -> int:
     counts = dataset.events["label"].value_counts()
     print(f"{len(dataset.events)} events: " + ", ".join(f"{k}={v}" for k, v in counts.items()))
     for path in paths.values():
-        print(f"  wrote {path}")
+        print(f"  wrote {display_path(path)}")
     return 0
 
 
@@ -94,8 +108,8 @@ def cmd_build_graphs(config: Config) -> int:
         )
         per_label = per_label.rename(index={0: "coincidental (0)", 1: "coordinated (1)"})
         print(per_label.round(2).to_string())
-    print(f"  wrote {output_dir / EPISODE_GRAPHS_FILE}")
-    print(f"  wrote {output_dir / EPISODE_SUMMARY_FILE}")
+    print(f"  wrote {display_path(output_dir / EPISODE_GRAPHS_FILE)}")
+    print(f"  wrote {display_path(output_dir / EPISODE_SUMMARY_FILE)}")
     return 0
 
 
@@ -116,7 +130,7 @@ def cmd_train(config: Config) -> int:
         f"threshold {summary['threshold']:.4f} (validation F1 {val['f1']:.3f}, "
         f"FPR {val['false_positive_rate']:.3f})"
     )
-    print(f"  wrote {summary['checkpoint']}")
+    print(f"  wrote {display_path(summary['checkpoint'])}")
     return 0
 
 
@@ -144,7 +158,47 @@ def cmd_evaluate(config: Config) -> int:
     print(f"ROC-AUC {fmt(test['roc_auc'])}  PR-AUC {fmt(test['pr_auc'])}")
     print(f"confusion matrix: tp={cm['tp']} fp={cm['fp']} tn={cm['tn']} fn={cm['fn']}")
     for path in evaluation["paths"].values():
-        print(f"  wrote {path}")
+        print(f"  wrote {display_path(path)}")
+    return 0
+
+
+def cmd_experiment(config: Config, spec_path: str, out: str | None) -> int:
+    warnings.filterwarnings("ignore", message="`torch.jit.script` is deprecated")
+    from cadgnn.experiments import load_spec, run_experiment
+
+    try:
+        spec = load_spec(spec_path, config)
+    except ConfigError as exc:
+        print(f"cadgnn: experiment spec error: {exc}", file=sys.stderr)
+        return 2
+    out_dir = Path(out) if out else config.paths.output_dir / "experiments"
+    runs = len(spec.scenarios) * len(spec.seeds) * len(spec.variants)
+    log.info("%d runs: %d scenario(s) x %d seed(s) x %d variant(s)", runs,
+             len(spec.scenarios), len(spec.seeds), len(spec.variants))  # fmt: skip
+    try:
+        experiment = run_experiment(config, spec, out_dir)
+    except ValueError as exc:
+        log.error("%s", exc)
+        return 1
+
+    summary = experiment["summary"]
+    print(f"{runs} runs finished")
+    for _, row in summary.iterrows():
+        mark = " (selected on validation)" if row["selected"] else ""
+        print(
+            f"{row['scenario']:>18} {row['variant']:<16} test F1 {row['test_f1_mean']:.3f}  "
+            f"FPR {row['test_fpr_mean']:.3f}{mark}"
+        )
+    for path in experiment["paths"].values():
+        print(f"  wrote {display_path(path)}")
+    return 0
+
+
+def cmd_params(config: Config) -> int:
+    warnings.filterwarnings("ignore", message="`torch.jit.script` is deprecated")
+    from cadgnn.experiments.parameters import render_parameter_table
+
+    print(render_parameter_table(config), end="")
     return 0
 
 
@@ -174,6 +228,10 @@ def main(argv: list[str] | None = None) -> int:
             return cmd_train(config)
         if args.command == "evaluate":
             return cmd_evaluate(config)
+        if args.command == "experiment":
+            return cmd_experiment(config, args.spec, args.out)
+        if args.command == "params":
+            return cmd_params(config)
     except (DatasetError, CalibrationError) as exc:
         log.error("%s", exc)
         return 1

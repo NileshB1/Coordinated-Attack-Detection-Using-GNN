@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from cadgnn.config import Config
+from cadgnn.config import Config, display_path
 from cadgnn.evaluation.detection_time import time_to_detect
 from cadgnn.evaluation.inference import predict
 from cadgnn.evaluation.metrics import classification_metrics
@@ -37,13 +37,19 @@ def _mean_or_none(values: np.ndarray) -> float | None:
     return float(values.mean()) if len(values) else None
 
 
-def run_evaluation(config: Config) -> dict:
-    output_dir = config.paths.output_dir
-    checkpoint_path = output_dir / CHECKPOINT_FILE
+def run_evaluation(
+    config: Config, graphs_file: Path | None = None, run_dir: Path | None = None
+) -> dict:
+    """Evaluate the checkpoint in ``run_dir/model``; results go to ``run_dir/evaluation``."""
+    graphs_file = graphs_file or config.paths.output_dir / EPISODE_GRAPHS_FILE
+    run_dir = run_dir or config.paths.output_dir
+    checkpoint_path = run_dir / CHECKPOINT_FILE
     if not checkpoint_path.is_file():
-        raise ModelInputError(f"no trained model at {checkpoint_path}, run training first")
+        raise ModelInputError(
+            f"no trained model at {display_path(checkpoint_path)}, run training first"
+        )
 
-    graphs = load_episode_graphs(output_dir / EPISODE_GRAPHS_FILE)
+    graphs = load_episode_graphs(graphs_file)
     model = build_coordination_model(config.model)
     checkpoint = load_checkpoint(model, checkpoint_path)
     split = split_from_ids(graphs, checkpoint["split"])
@@ -54,7 +60,9 @@ def run_evaluation(config: Config) -> dict:
     pred = predict(model, test, device=device)
     test_metrics = classification_metrics(pred.y, pred.scores, threshold)
     detection = time_to_detect(model, test, threshold, config.graph.min_episode_events, device)
-    decisions = episode_decisions(test, pred, threshold, _load_infrastructure(output_dir))
+    # The generator writes its node and edge tables next to the graphs.
+    infra = _load_infrastructure(graphs_file.parent)
+    decisions = episode_decisions(test, pred, threshold, infra)
 
     gate_summary = None
     if pred.gates is not None:
@@ -66,8 +74,8 @@ def run_evaluation(config: Config) -> dict:
 
     results = {
         "seed": checkpoint["seed"],
-        "checkpoint": str(checkpoint_path),
-        "episode_graphs": str(output_dir / EPISODE_GRAPHS_FILE),
+        "checkpoint": display_path(checkpoint_path),
+        "episode_graphs": display_path(graphs_file),
         "model_config": checkpoint["model_config"],
         "training_config": checkpoint["training_config"],
         "threshold_strategy": checkpoint["training_config"]["threshold_strategy"],
@@ -80,5 +88,5 @@ def run_evaluation(config: Config) -> dict:
         "mean_test_score": float(np.mean(pred.scores)),
         "not_evaluated": NOT_EVALUATED,
     }
-    paths = write_evaluation(output_dir / EVALUATION_DIR, results, decisions)
+    paths = write_evaluation(run_dir / EVALUATION_DIR, results, decisions)
     return {"results": results, "paths": paths}

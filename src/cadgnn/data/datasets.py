@@ -12,6 +12,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from cadgnn.config import display_path
+
 # Trace name -> whether the program is ransomware. Each trace is the ata_write.csv
 # of one RanSAP run, saved under the trace name.
 RANSAP_TRACES: dict[str, bool] = {
@@ -48,7 +50,8 @@ class DatasetInventory:
 
     def summary(self) -> str:
         lines = [
-            f"datasets root: {self.root} ",  f"RanSAP traces: {len(self.ransap)}/{len(RANSAP_TRACES)} ",
+            f"datasets root: {display_path(self.root)} ",
+            f"RanSAP traces: {len(self.ransap)}/{len(RANSAP_TRACES)} ",
             f"NapierOne table: {'found' if self.napierone else 'missing'}",
             f"FSL snapshot traces: {len(self.fsl_snapshots)}",
         ]
