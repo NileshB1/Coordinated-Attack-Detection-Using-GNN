@@ -24,10 +24,18 @@ log = logging.getLogger(__name__)
 CHECKPOINT_FILE = Path("model") / "coordination_model.pt"
 
 
-def run_training(config: Config) -> dict:
+def run_training(
+    config: Config, graphs_file: Path | None = None, run_dir: Path | None = None
+) -> dict:
+    """Train on the episode graphs; the checkpoint goes to ``run_dir/model``.
+
+    Both default to the configured output directory. Experiments pass their own
+    ``run_dir`` so several model variants can share one set of graphs.
+    """
     output_dir = config.paths.output_dir
+    run_dir = run_dir or output_dir
     tc = config.training
-    graphs = load_episode_graphs(output_dir / EPISODE_GRAPHS_FILE)
+    graphs = load_episode_graphs(graphs_file or output_dir / EPISODE_GRAPHS_FILE)
 
     seed_everything(config.seed)
     split = stratified_split(graphs, tc.val_fraction, tc.test_fraction, config.seed)
@@ -43,7 +51,7 @@ def run_training(config: Config) -> dict:
     threshold = select_threshold(val_pred.y, val_pred.scores, tc.threshold_strategy, tc.max_fpr)
     val_metrics = classification_metrics(val_pred.y, val_pred.scores, threshold)
 
-    path = output_dir / CHECKPOINT_FILE
+    path = run_dir / CHECKPOINT_FILE
     save_checkpoint(
         model.cpu(),
         path,
@@ -61,6 +69,7 @@ def run_training(config: Config) -> dict:
         "checkpoint": path,
         "threshold": threshold,
         "best_epoch": result.best_epoch,
+        "best_val_loss": result.best_val_loss,
         "epochs_run": len(result.history),
         "val_metrics": val_metrics,
         "split_sizes": {"train": len(train), "val": len(val), "test": len(split.test)},
