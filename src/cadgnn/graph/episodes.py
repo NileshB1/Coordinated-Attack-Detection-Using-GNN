@@ -1,10 +1,11 @@
 """One heterogeneous graph per flagged anomaly episode.
 
-An episode is the set of anomaly events sharing an ``episode_id``. Its graph holds
+An episode is the set of anomaly events sharing an episode_id. Its graph holds
 the episode's VMs together with their backup images, storage pools and network
-fabrics, and the edges among them. The question each graph answers is the one
-from RQ1: given these flagged anomalies, are they coordinated (y = 1) or
-coincidental (y = 0)?
+fabrics, and the edges among them. 
+The question each graph answers is the one
+are anomalies 
+coordinated (y = 1) or coincidental (y = 0)?
 """
 
 from __future__ import annotations
@@ -16,18 +17,15 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import torch
+
 from torch_geometric.data import HeteroData
 
 from cadgnn.generator import EDGES_FILE, NODES_FILE, TELEMETRY_FILE
 from cadgnn.graph.events import anomaly_episodes, clean_events, load_events
 from cadgnn.graph.infrastructure import InfrastructureGraph
 from cadgnn.graph.schema import (
-    EDGE_TYPES,
-    NODE_TYPES,
-    TARGETS,
-    VM_FEATURES,
-    GraphConstructionError,
-    reverse,
+    EDGE_TYPES, NODE_TYPES, TARGETS, VM_FEATURES,
+    GraphConstructionError,  reverse
 )
 
 log = logging.getLogger(__name__)
@@ -54,7 +52,7 @@ def load_generator_output(output_dir: str | Path) -> tuple[InfrastructureGraph, 
 def build_episode_graph(
     infra: InfrastructureGraph, episode: pd.DataFrame, episode_id: str
 ) -> HeteroData:
-    """Graph for one episode; ``episode`` must be sorted by time with one row per VM."""
+    """Graph for one episode, episode must be sorted by time with one row per VM."""
     labels = episode["label"].unique()
     if len(labels) != 1 or labels[0] not in TARGETS:
         raise GraphConstructionError(f"episode {episode_id} has label(s) {list(labels)}")
@@ -86,13 +84,11 @@ def build_episode_graph(
 
 
 def build_episode_graphs(
-    infra: InfrastructureGraph, events: pd.DataFrame, min_events: int = 2
-) -> list[HeteroData]:
-    """One graph per anomaly episode, in sorted episode-id order.
+    infra: InfrastructureGraph, events: pd.DataFrame, min_events: int = 2):
+    """One graph per anomaly episode, in sorted episode id order
 
-    Episodes with fewer than ``min_events`` events are skipped: a single event
-    cannot be called coordinated or coincidental. ``events`` should already have
-    been through ``clean_events``.
+    Episodes with fewer than min_events events are skipped: a single event
+    cannot be called coordinated or coincidental. events should already have been through clean_events
     """
     if min_events < 1:
         raise ValueError(f"min_events must be at least 1, got {min_events}")
@@ -116,15 +112,11 @@ def episode_summary(graphs: list[HeteroData]) -> pd.DataFrame:
         rel = data["vm"].rel_time_hours
         rows.append(
             {
-                "episode_id": data.episode_id,
-                "y": int(data.y.item()),
-                "n_vm": data["vm"].num_nodes,
-                "n_backup_image": data["backup_image"].num_nodes,
-                "n_storage": data["storage"].num_nodes,
-                "n_network": data["network"].num_nodes,
+                "episode_id": data.episode_id,  "y": int(data.y.item()),
+                "n_vm": data["vm"].num_nodes, "n_backup_image": data["backup_image"].num_nodes,
+                "n_storage": data["storage"].num_nodes,  "n_network": data["network"].num_nodes,
                 "n_edges": sum(data[et].edge_index.size(1) for et in EDGE_TYPES),
-                "time_span_hours": float(rel.max()) if len(rel) else 0.0,
-                "n_components": _count_components(data),
+                "time_span_hours": float(rel.max()) if len(rel) else 0.0, "n_components": _count_components(data)
             }
         )
     columns = ["episode_id", "y", "n_vm", "n_backup_image", "n_storage", "n_network",
