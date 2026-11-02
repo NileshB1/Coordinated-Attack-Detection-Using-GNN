@@ -1,0 +1,34 @@
+# Comparison runs: ablations, single-stream baselines and generator scenarios.
+# Every variant is trained and evaluated on every scenario and seed.
+seeds: [1, 2, 3]
+
+scenarios:
+  # Generator settings from default.yaml.
+  default: {}
+  # Campaign hops hours apart instead of minutes, so timing alone separates less.
+  slow_campaigns:
+    generator:
+      hop_delay_minutes: [120, 720]
+  # Only 10 network fabrics: unrelated VMs often share one, so topology separates less.
+  crowded_networks:
+    generator:
+      n_network: 10
+  # Domain randomisation: these settings are drawn again for every seed.
+  randomised:
+    randomize:
+      n_network: [5, 200]
+      n_coincidental_episodes: [60, 160]
+      n_coordinated_episodes: [30, 80]
+
+variants:
+  gated: {}
+  concat:
+    model: {fusion: concat}
+  temporal_only:
+    model: {use_spatial: false}
+  spatial_only:
+    model: {use_temporal: false}
+  one_gat_layer:
+    model: {spatial_layers: 1}
+  hidden_32:
+    model: {hidden_dim: 32, temporal_dim: 32, spatial_dim: 32, fusion_dim: 32}
