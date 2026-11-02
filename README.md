@@ -180,6 +180,56 @@ first reaches the threshold. Structural path similarity, severity metrics and pr
 calibration are not evaluated; the report lists why. Scores are uncalibrated, and all results
 come from synthetic episodes.
 
+## Experiments: ablations, baselines and scenarios
+
+```bash
+python run_experiments.py
+python run_experiments.py --spec configs/experiments.yaml --out runs/comparison
+```
+
+`configs/experiments.yaml` lists seeds, generator scenarios and model variants. Every variant is
+trained and evaluated on every scenario and seed, with each run under
+`<out>/<scenario>/seed_<n>/<variant>/`:
+
+- variants switch a stream off (`temporal_only`, `spatial_only` baselines), change the fusion
+  method (`concat`) or change one setting at a time (ablation);
+- scenarios change the generator, either to fixed values (for example slower campaigns or fewer
+  network fabrics) or, under `randomize`, to values drawn again for every seed (domain
+  randomisation).
+
+`results.csv` has one row per run, `summary.csv` and `summary.md` the mean and standard deviation
+over seeds. The variant marked as selected per scenario has the best mean validation F1; test
+results are reported but never used to choose.
+
+### Tunable settings
+
+`cadgnn params` prints this table from the config classes, so it always matches the code:
+
+| Setting | Component | Controls | Default | Current | Values to try |
+| --- | --- | --- | --- | --- | --- |
+| `graph.min_episode_events` | graph construction | smallest episode turned into a graph | 2 | 2 | 2, 3 |
+| `model.hidden_dim` | both streams | width of node and sequence representations | 64 | 64 | 32, 64, 128 |
+| `model.temporal_dim` | temporal stream | size of the temporal episode vector | 64 | 64 | 32, 64 |
+| `model.spatial_dim` | spatial stream | size of the spatial episode vector | 64 | 64 | 32, 64 |
+| `model.temporal_layers` | temporal stream | stacked GRU layers | 1 | 1 | 1, 2 |
+| `model.spatial_layers` | spatial stream | GAT layers (2 lets VMs on one network see each other) | 2 | 2 | 1, 2, 3 |
+| `model.spatial_heads` | spatial stream | attention heads per GAT layer | 2 | 2 | 1, 2, 4 |
+| `model.use_temporal` | ablation | temporal stream on or off | True | True | true, false |
+| `model.use_spatial` | ablation | spatial stream on or off | True | True | true, false |
+| `model.fusion` | fusion | how the two streams are combined | gated | gated | gated, concat |
+| `model.fusion_dim` | fusion | size of the fused vector | 64 | 64 | 32, 64 |
+| `model.dropout` | all | dropout rate | 0.1 | 0.1 | 0.0, 0.1, 0.3 |
+| `model.device` | runtime | cpu, cuda or auto | auto | auto | not tuned |
+| `training.val_fraction` | split | share of episodes for validation | 0.2 | 0.2 | 0.2 |
+| `training.test_fraction` | split | share of episodes held out for testing | 0.2 | 0.2 | 0.2 |
+| `training.epochs` | training | maximum epochs | 100 | 100 | 100, 200 |
+| `training.batch_size` | training | episodes per batch | 16 | 16 | 8, 16, 32 |
+| `training.learning_rate` | training | Adam learning rate | 0.001 | 0.001 | 1e-3, 3e-4 |
+| `training.weight_decay` | training | L2 penalty in Adam | 0.0001 | 0.0001 | 0, 1e-4, 1e-3 |
+| `training.patience` | training | epochs without validation gain before stopping | 15 | 15 | 15 |
+| `training.threshold_strategy` | decision | best validation F1, or best recall under an FPR cap | f1 | f1 | f1, fpr |
+| `training.max_fpr` | decision | FPR cap for the fpr strategy (alert fatigue) | 0.1 | 0.1 | 0.05, 0.1 |
+
 ## Layout
 
 ```
@@ -187,6 +237,7 @@ run_generator.py      entry point for the random anomaly generator
 run_graph_builder.py  entry point for building the episode graphs
 run_training.py       entry point for training and threshold selection
 run_evaluation.py     entry point for the held-out evaluation and decision report
+run_experiments.py    entry point for the comparison experiments
 configs/              run configurations
 notebooks/            reference notebook for the random anomaly generator (kept unchanged)
 src/cadgnn/
@@ -199,6 +250,7 @@ src/cadgnn/
   fusion/             fusion layers, coordination model and loss
   training/           stratified split, training loop, training run
   evaluation/         metrics, thresholds, time to detect, decision report
+  experiments/        experiment specs, runner, summaries, parameter table
   config.py, cli.py   configuration and command line
 tests/                pytest suite
 ```
