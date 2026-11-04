@@ -1,10 +1,11 @@
 """Container that runs the temporal and spatial streams side by side.
 
-A stream is any ``nn.Module`` with an ``out_dim`` attribute whose forward takes
-a batch of episode graphs (VM features already scaled) and returns a tensor of
-shape [num_graphs, out_dim]. The two outputs are returned separately; combining
-them is the job of the fusion layer. Passing None for a stream switches it off
-and its output comes back as None.
+A stream is any nn.Module with an out_dim attribute whose forward takes a batch of episode graphs 
+(VM features already scaled) and returns a tensor of
+shape [num_graphs, out_dim]. 
+The two outputs are returned separately; combining them is the job of the fusion layer. 
+Passing None for a stream switches it off and 
+its output comes back as None.
 """
 
 from __future__ import annotations

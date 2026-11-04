@@ -1,9 +1,8 @@
-"""Full model: both streams, fusion, and a single coordination logit per episode.
+"""Full model: both streams, fusion and a single coordination logit per episode.
 
-The logit is for "coordinated" (graph label 1) against "coincidental" (0).
-sigmoid(logit) is a coordination score in (0, 1); it is not calibrated, so it
-should not be read as a probability. Picking a decision threshold is left to
-evaluation.
+The logit is for "coordinated" (graph label 1) against "coincidental" (0). sigmoid(logit) is a coordination score in 
+(0, 1); it is not calibrated, so it should not be read as a probability. 
+Picking a decision threshold is left to evaluation.
 """
 
 from __future__ import annotations
@@ -37,9 +36,9 @@ class CoordinationModel(nn.Module):
                 f"fusion out_dim is {getattr(fusion, 'out_dim', None)}, "
                 f"config expects {config.fusion_dim}"
             )
-        self.config = config
-        self.streams = streams
-        self.fusion = fusion
+        self.config=config
+        self.streams=streams
+        self.fusion=fusion
         self.classifier = nn.Sequential(nn.Dropout(config.dropout), nn.Linear(config.fusion_dim, 1))
 
     def fit_scaler(self, train_graphs: Sequence[HeteroData]) -> CoordinationModel:
@@ -54,7 +53,7 @@ class CoordinationModel(nn.Module):
 
     @torch.no_grad()
     def score(self, batch: Batch) -> Tensor:
-        """Uncalibrated coordination score per episode, in eval mode."""
+        """Uncalibrated coordination score per episode, in eval mode"""
         was_training = self.training
         self.eval()
         try:
@@ -64,7 +63,7 @@ class CoordinationModel(nn.Module):
 
 
 def build_coordination_model(config: ModelConfig) -> CoordinationModel:
-    temporal = build_temporal_stream(config) if config.use_temporal else None
-    spatial = build_spatial_stream(config) if config.use_spatial else None
-    streams = DualStreamModel(config, temporal, spatial)
+    temporal=build_temporal_stream(config) if config.use_temporal else None
+    spatial=build_spatial_stream(config) if config.use_spatial else None
+    streams=DualStreamModel(config, temporal, spatial)
     return CoordinationModel(config, streams, build_fusion(config))

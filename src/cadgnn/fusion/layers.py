@@ -1,9 +1,10 @@
-"""Ways of combining the temporal and spatial embeddings into one vector.
+"""Ways of combining the temporal and spatial embeddings into one vector
 
-The streams look at different things (timing and telemetry vs. infrastructure
-structure) and their embeddings live in different spaces, so each one is first
-projected to the fusion size. GatedFusion then learns, per episode and per
-dimension, how much to take from each; ConcatFusion is the plain baseline.
+The streams look at different things 
+(timing and telemetry vs. infrastructure structure) and their embeddings live in different spaces, 
+so each one is first projected to the fusion size. 
+GatedFusion then learns, per episode and per dimension, how much to take from each
+ConcatFusion is the plain baseline.
 """
 
 from __future__ import annotations
@@ -15,11 +16,12 @@ from cadgnn.config import ModelConfig
 
 
 class GatedFusion(nn.Module):
-    """Gated multimodal unit (Arevalo et al., 2017).
+    """Gated multimodal unit
 
     h = z * tanh(W_t t) + (1 - z) * tanh(W_s s), with z = sigmoid(W_z [t; s]).
-    The mean of z over the dimensions is returned as the temporal share, so a
-    report can say which stream an episode's decision leaned on.
+    
+    The mean of z over the dimensions is returned 
+    as the temporal share, so a report can say which stream an episode's decision leaned on.
     """
 
     def __init__(self, temporal_dim: int, spatial_dim: int, out_dim: int) -> None:

@@ -1,8 +1,9 @@
 """Per-episode event sequences built from a batch of episode graphs.
 
-Each step is one flagged event: its (scaled) telemetry plus two timing values,
-log1p of the hours since the episode's first event and log1p of the hours since
-the previous event. Both only look backwards, so step t never sees later events.
+Each step is one flagged event: its (scaled) telemetry plus two timing values, log1p of the hours since 
+the episode's first event and log1p of the hours since
+the previous event. 
+Both only look backwards, so step t never sees later events.
 """
 
 from __future__ import annotations
@@ -43,7 +44,7 @@ def event_sequences(batch: Batch) -> EventSequences:
         empty = torch.nonzero(lengths == 0).flatten().tolist()
         raise TemporalInputError(f"graph(s) {empty} have no VM events")
 
-    # Sort by graph, then by event order, rather than trusting the storage order.
+    #sort by graph, then by event order rather than trusting the storage order
     key = graph * (int(vm.event_order.max()) + 1) + vm.event_order
     order = torch.argsort(key, stable=True)
     graph, times, x = graph[order], times[order], x[order]

@@ -1,8 +1,9 @@
-"""Spatial topology stream: is there a plausible path between the flagged VMs?
+"""Spatial topology stream: 
+is there a plausible path between the flagged VMs?
 
-Graph attention runs over the episode's VMs, backup images, storage pools and
-network fabrics. Only VM telemetry and graph structure go in; event times,
-labels, episode ids and global node indices are not used.
+Graph attention runs over the episode's VMs, backup images, storage pools and network fabrics. 
+Only VM telemetry and graph structure go in; event times, labels, episode ids 
+and global node indices are not used.
 """
 
 from __future__ import annotations
@@ -21,35 +22,26 @@ from cadgnn.spatial.structure import node_degrees
 class SpatialTopologyStream(nn.Module):
     """Heterogeneous GAT with one attention layer per edge type.
 
-    Resource nodes have no features, so every node also gets log1p of its degree
-    in the episode graph; that is how a network shared by several flagged VMs
-    differs from one used by a single VM. Two layers let a VM hear from the other
-    VMs on its network (vm -> network -> vm).
+    Resource nodes have no features, so every node also gets log1p of its degree in the episode graph, 
+    that is how a network shared by several flagged VMs
+    differs from one used by a single VM. 
+    Two layers let a VM hear from the other VMs on its network (vm -> network -> vm)
     """
 
     def __init__(
-        self,
-        hidden_dim: int,
-        out_dim: int,
-        num_layers: int = 2,
-        heads: int = 2,
-        dropout: float = 0.0,
-        n_features: int = len(VM_FEATURES),
+        self,  hidden_dim: int,
+        out_dim: int,  num_layers: int = 2, heads: int = 2,  dropout: float = 0.0,
+        n_features: int = len(VM_FEATURES)
     ) -> None:
         super().__init__()
         self.out_dim = out_dim
         self.encoder = NodeEncoder(hidden_dim, n_features=n_features)
         self.degree = nn.Linear(1, hidden_dim)
         self.convs = nn.ModuleList(
-            HeteroConv(
-                {
+            HeteroConv({
                     et: GATConv(
-                        (hidden_dim, hidden_dim),
-                        hidden_dim,
-                        heads=heads,
-                        concat=False,
-                        dropout=dropout,
-                        add_self_loops=False,
+                        (hidden_dim, hidden_dim),  hidden_dim,  heads=heads,  concat=False,
+                        dropout=dropout, add_self_loops=False
                     )
                     for et in all_edge_types()
                 },
@@ -93,9 +85,6 @@ class SpatialTopologyStream(nn.Module):
 
 def build_spatial_stream(config: ModelConfig) -> SpatialTopologyStream:
     return SpatialTopologyStream(
-        hidden_dim=config.hidden_dim,
-        out_dim=config.spatial_dim,
-        num_layers=config.spatial_layers,
-        heads=config.spatial_heads,
-        dropout=config.dropout,
+        hidden_dim=config.hidden_dim, out_dim=config.spatial_dim,  num_layers=config.spatial_layers,  heads=config.spatial_heads,
+        dropout=config.dropout
     )

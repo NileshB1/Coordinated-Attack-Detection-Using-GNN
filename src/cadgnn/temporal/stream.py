@@ -1,8 +1,10 @@
-"""Temporal severity stream: are the flagged events close in time and intense?
+"""Temporal severity stream: 
+are the flagged events close in time and intense?
 
-There are no severity labels in the data, so this stream is not trained on a
-severity target. It encodes telemetry intensity and event timing into one
-vector per episode and learns only through the episode label downstream.
+There are no severity labels in the data, 
+so this stream is not trained on a severity target. It encodes 
+telemetry intensity and event timing into one vector per episode 
+and learns only through the episode label downstream.
 """
 
 from __future__ import annotations
@@ -25,12 +27,9 @@ class TemporalSeverityStream(nn.Module):
     """
 
     def __init__(
-        self,
-        hidden_dim: int,
-        out_dim: int,
-        n_features: int = len(VM_FEATURES),
-        num_layers: int = 1,
-        dropout: float = 0.0,
+        self,  hidden_dim: int,
+        out_dim: int, n_features: int = len(VM_FEATURES),
+        num_layers: int = 1,  dropout: float = 0.0
     ) -> None:
         super().__init__()
         self.out_dim = out_dim
@@ -38,11 +37,8 @@ class TemporalSeverityStream(nn.Module):
             nn.Linear(n_features + len(TIME_FEATURES), hidden_dim), nn.ReLU()
         )
         self.gru = nn.GRU(
-            hidden_dim,
-            hidden_dim,
-            num_layers=num_layers,
-            batch_first=True,
-            dropout=dropout if num_layers > 1 else 0.0,
+            hidden_dim,  hidden_dim, num_layers=num_layers,  batch_first=True,
+            dropout=dropout if num_layers > 1 else 0.0
         )
         self.head = nn.Sequential(nn.Dropout(dropout), nn.Linear(2 * hidden_dim, out_dim))
 
@@ -65,8 +61,6 @@ class TemporalSeverityStream(nn.Module):
 
 def build_temporal_stream(config: ModelConfig) -> TemporalSeverityStream:
     return TemporalSeverityStream(
-        hidden_dim=config.hidden_dim,
-        out_dim=config.temporal_dim,
-        num_layers=config.temporal_layers,
-        dropout=config.dropout,
+        hidden_dim=config.hidden_dim,  out_dim=config.temporal_dim,  num_layers=config.temporal_layers,
+        dropout=config.dropout
     )
